@@ -465,18 +465,18 @@
     display: table-cell;
 }
 
-/*[previewCols~=index] .netIndexCol,
-[previewCols~=url] .netHrefCol,
-[previewCols~=status] .netStatusCol,
-[previewCols~=domain] .netDomainCol,
-[previewCols~=serverIPAddress] .netServerIPAddressCol,
-[previewCols~=connection] .netConnectionCol,
-[previewCols~=size] .netSizeCol,
-[previewCols~=timeline] .netTimeCol,
-[previewCols~=type] .netTypeCol {
+div[previewcols~=index] .netIndexCol,
+div[previewcols~=url] .netHrefCol,
+div[previewcols~=status] .netStatusCol,
+div[previewcols~=domain] .netDomainCol,
+div[previewcols~=serverIPAddress] .netServerIPAddressCol,
+div[previewcols~=connection] .netConnectionCol,
+div[previewcols~=size] .netSizeCol,
+div[previewcols~=timeline] .netTimeCol,
+div[previewcols~=type] .netTypeCol {
     display: table-cell;
 }
-*/
+/*
  .netIndexCol,
  .netHrefCol,
  .netStatusCol,
@@ -487,4 +487,4 @@
  .netTimeCol,
  .netTypeCol {
     display: table-cell;
-}
+}*/

@@ -385,7 +385,8 @@ RequestList.getVisibleColumns = function()
 
     if (!cols)
     {
-        var content = document.getElementById("content");
+        var content = document.getElementsByClassName("js-ajaxTabContent").item(document.getElementsByClassName("js-ajaxTabContent").length - 1);
+            //document.getElementById("content");
         if (content)
         {
             cols = content.getAttribute("previewCols");
@@ -406,7 +407,8 @@ RequestList.setVisibleColumns = function(cols, avoidCookies)
     if (cols.join)
         cols = cols.join(" ");
 
-    var content = document.getElementById("content");
+    var content = document.getElementsByClassName("js-ajaxTabContent").item(document.getElementsByClassName("js-ajaxTabContent").length - 1);
+    //document.getElementById("content");
     if (content)
         content.setAttribute("previewCols", cols);
 

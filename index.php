@@ -53,6 +53,7 @@ header("Content-Type: text/html; charset=utf-8");
         <div class="FilterWrapper">
             <? if (!empty($arResult['FILTER_DIR'])) { ?>
                 <div class="Filter js-ajaxForm" data-tab-id="1">
+                    <div class="FileList js-fileItems"></div>
                     <span class="Filter__label">Путь</span>
                     <?=$arResult['FILTER_DIR']?>
                 </div>
