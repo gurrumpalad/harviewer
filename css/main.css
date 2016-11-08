@@ -1,0 +1,31 @@
+* {
+  box-sizing: border-box;
+}
+.Wrapper {
+    width: 100%;
+    margin: 0;
+    background: #ffffff;
+    text-align: left;
+    position: relative;
+}
+
+.FilterWrapper {
+    width: 100%;
+    padding: 15px 10px;
+    position: relative;
+    display: table;
+
+}
+
+.Filter {
+    display: table-cell;
+    height: 45px;
+}
+
+.Filter__folder {
+    margin: 0 5px;
+}
+
+.Content {
+    position: relative;
+}
