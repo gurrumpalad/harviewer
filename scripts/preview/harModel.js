@@ -103,8 +103,12 @@ HarModel.prototype =
         {
             if (input.log.pages)
             {
-                for (var i=0; i<input.log.pages.length; i++)
+                for (var i=0; i < input.log.pages.length; i++) {
+                    Trace.log("current delete page");
+                    Trace.log(input.log.pages[i]);
                     this.removePage(input.log.pages[i]);
+                }
+
             }
             else
             {
@@ -119,7 +123,7 @@ HarModel.prototype =
         {
             this.input = null;
         }
-        if (this.input.log.pages[0] === undefined && this.input.log.pages.length <= 1) {
+        if (this.input.log.pages.length <= 0) {
             this.input = null;
         }
 
@@ -187,12 +191,16 @@ HarModel.prototype =
 
     removePage: function(page)
     {
-        if (this.input) {
+        if (this.input && page) {
             var pageTitle = page.title;
             var pageStart = page.startedDateTime;
             for (var i = 0; i < this.input.log.pages.length; i++) {
                 var curPageTitle = this.input.log.pages[i].title;
                 var curPageStart = this.input.log.pages[i].startedDateTime;
+                Trace.log(pageTitle);
+                Trace.log(pageStart);
+                Trace.log(curPageTitle);
+                Trace.log(curPageStart);
                 if (
                     curPageStart
                     && curPageTitle
@@ -200,31 +208,36 @@ HarModel.prototype =
                     && curPageTitle == pageTitle
                 ) {
                     var pageId = this.input.log.pages[i].id;
+                    Trace.log('rem page ' + pageId);
                     if (this.input.log.entries) {
                         for (var j = 0; j < this.input.log.entries.length; j++) {
                             if (this.input.log.entries[j].pageref === pageId) {
+                                Trace.log('remove entry may ' + this.input.log.entries[j].pageref);
                                 this.input.log.entries[j] = null;
                             }
                         }
                     }
                     this.input.log.pages[i] = null;
+                    Trace.log('now page ' + this.input.log.pages[i]);
                     break;
                 }
             }
             var tempPages = [];
             for (var k = 0; k < this.input.log.pages.length; k++) {
-                if (this.input.log.pages[k]) {
+                if (this.input.log.pages[k] && this.input.log.pages[k] != null) {
                     tempPages.push(this.input.log.pages[k]);
                 }
             }
             this.input.log.pages = tempPages;
             var tempEntry = [];
             for (var l = 0; l < this.input.log.entries.length; l++) {
-                if (this.input.log.entries[l]) {
+                if (this.input.log.entries[l] && this.input.log.entries[l] != null) {
                     tempEntry.push(this.input.log.entries[l]);
                 }
             }
             this.input.log.entries = tempEntry;
+            Trace.log('this.input after remove ');
+            Trace.log(this.input);
         }
     },
 

@@ -85,28 +85,10 @@ function GetPath(elem) {
     }
 }
 $(document).ready(function(){
-    /*if ($('.js-dateInput').length > 0) {
-        $('.js-dateInput').each(function(){
-            var objInput = $(this);
-            objInput.datepicker({
-                buttonText: 'Выберите дату',
-                showOn: 'button',
-                dateFormat: objInput.attr('data-format') != undefined ? objInput.attr('data-format') : 'dd.mm.yy',
-                minDate: objInput.attr('data-date-min') != undefined ? objInput.attr('data-date-min') : null,
-                maxDate: objInput.attr('data-date-max') != undefined ? objInput.attr('data-date-max') : null,
-                changeMonth: true,
-                changeYear: true
-            });
-            objInput.nextAll('.ui-datepicker-trigger').addClass('chooseDate');
-            $(objInput).on('click', function(){
-                $(this).nextAll('.ui-datepicker-trigger')[0].click();
-            });
-        });
-    }*/
     if ($('.js-ajaxForm').length > 0 && $('.js-ajaxListener').length > 0) {
-        $('.js-ajaxListener').on('change', '.js-ajaxForm .js-checkFile', function(){
+        /*$('.js-ajaxListener').on('change', '.js-ajaxForm .js-checkFile', function(){
             //GetPath($(this));
-        });
+        });*/
         $('.js-ajaxListener').on('click', '.js-ajaxForm .js-checkFile option', function(){
             GetPath($(this).parents('.js-checkFile'));
         });
@@ -147,7 +129,6 @@ $(document).ready(function(){
                             } else {
                                 tabObj.initialize($('.js-ajaxTabContent[data-tab-id="' + tabID + '"]').last().get(0));
                             }
-                            //tabObj.render($('.js-ajaxTabContent[data-tab-id="' + tabID + '"]').last().get(0));
                         });
                     } catch (e) {
                         console.log(e);
@@ -155,5 +136,35 @@ $(document).ready(function(){
                 }
             }
         });
+        $('.js-ajaxListener').on('click', '.js-test', function () {
+            console.log('click');
+            var tabObj = $('.js-ajaxTabContent[data-tab-id="1"]').last().get(0).repObject;
+            if (tabObj) {
+                var pages = tabObj.model.input;
+                console.log(pages);
+            }
+        });
     }
+    /*if ($(".harDownloadButton").length > 0) {
+        $(".harDownloadButton").downloadify({
+            filename: function() {
+                return "netData.har";
+            },
+            data: function() {
+                return model ? model.toJSON() : "";
+            },
+            onComplete: function() {},
+            onCancel: function() {},
+            onError: function() {
+                Trace.log(Strings.downloadError);
+                //alert(Strings.downloadError);
+            },
+            swf: "../../scripts/downloadify/media/downloadify.swf",
+            downloadImage: "../../css/images/download-sprites.png",
+            width: 16,
+            height: 16,
+            transparent: true,
+            append: false
+        });
+    }*/
 });

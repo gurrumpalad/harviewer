@@ -14,12 +14,14 @@ define("tabs/previewTab", [
     "preview/pageList",
     "core/cookies",
     "preview/validationError",
-    "downloadify/js/swfobject",
-    "downloadify/src/downloadify"
+    "core/trace",
+    /*"downloadify/js/swfobject",
+    "downloadify/src/downloadify"*/
+
 ],
 
 function(Domplate, TabView, Lib, Strings, Toolbar, Timeline, Stats, PageList, Cookies,
-    ValidationError) {
+    ValidationError, Trace) {
 
 var DIV = Domplate.DIV;
 
@@ -99,6 +101,7 @@ PreviewTab.prototype = Lib.extend(TabView.Tab.prototype,
             onComplete: function() {},
             onCancel: function() {},
             onError: function() {
+                Trace.log(Strings.downloadError);
                 alert(Strings.downloadError);
             },
             swf: "scripts/downloadify/media/downloadify.swf",

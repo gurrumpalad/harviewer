@@ -60,6 +60,7 @@ header("Content-Type: text/html; charset=utf-8");
                     <?=$arResult['FILTER_DIR']?>
                 </div>
                 <? } ?>
+                <button class="js-test">Тест</button>
             </div>
             <div class="Content">
                 <? if (!empty($arResult['FILTER_DIR'])) { ?>
@@ -86,6 +87,8 @@ header("Content-Type: text/html; charset=utf-8");
         </div>-->
     </div>
     <script src="scripts/jquery.js"></script>
+    <script src="scripts/downloadify/js/swfobject.js"></script>
+    <script src="scripts/downloadify/src/downloadify.js"></script>
     <script src="scripts/script.js"></script>
     <script data-main="scripts/harViewer" src="scripts/require.js"></script>
     <!--@GOOGLE-ANALYTICS-INCLUDE@-->

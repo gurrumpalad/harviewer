@@ -5,10 +5,10 @@
  */
 define("harViewer", [
     "domplate/tabView",
-    "tabs/homeTab",
-    "tabs/aboutTab",
+    /*"tabs/homeTab",*/
+    /*"tabs/aboutTab",*/
     "tabs/previewTab",
-    "tabs/schemaTab",
+    /*"tabs/schemaTab",*/
     "tabs/domTab",
     "preview/harModel",
     "preview/harModelLoader",
@@ -18,7 +18,7 @@ define("harViewer", [
     "core/trace"
 ],
 
-function(TabView, HomeTab, AboutTab, PreviewTab, SchemaTab, DomTab, HarModel,
+function(TabView, /*HomeTab, AboutTab,*/ PreviewTab, /*SchemaTab,*/ DomTab, HarModel,
     Loader, Strings, RequestList, Lib, Trace) {
 
 var contents = document.getElementsByClassName("js-ajaxTabContent");//.item(document.getElementsByClassName("js-ajaxTabContent").length - 1);
@@ -93,12 +93,12 @@ HarView.prototype = Lib.extend(new TabView(),
         var okCallback = Lib.bind(this.appendPreview, this);
         var errorCallback = Lib.bind(this.onLoadError, this);
 
-        if (Loader.run(okCallback, errorCallback))
+        /*if (Loader.run(okCallback, errorCallback))
         {
             var homeTab = this.getTab("Home");
             if (homeTab)
                 homeTab.loadInProgress(true);
-        }
+        }*/
         if (inputHar) {
             this.appendPreview(inputHar);
         }
@@ -112,7 +112,7 @@ HarView.prototype = Lib.extend(new TabView(),
 
         try
         {
-            var validate = $("#validate").prop("checked");
+            var validate = false; //$("#validate").prop("checked");
             var input = HarModel.parse(jsonString, validate);
             this.model.append(input);
 
@@ -163,103 +163,27 @@ HarView.prototype = Lib.extend(new TabView(),
 
     removeHarFile: function(jsonString)
     {
-        /*this.removeAllTabs();
-        if (this.getTab("Preview" + this.iterator) === undefined) {
-            var curTab = new PreviewTab(this.model);
-            curTab.setUniqID(this.iterator);
-            this.appendTab(curTab);
-        }
-        if (this.getTab("DOM" + this.iterator) === undefined) {
-            var curTab = new DomTab();
-            curTab.setUniqID(this.iterator);
-            this.appendTab(curTab);
-        }*/
-        var previewTab = this.getTab("Preview" + this.iterator);
-        var domTab = this.getTab("DOM" + this.iterator);
-
         try
         {
-            var validate = false;//$("#validate").prop("checked");
+            var validate = false;
             var input = HarModel.parse(jsonString, validate);
             input = this.model.removeHar(input);
             this.model.input = input;
-            Trace.log(input);
-            return this.model.toJSON(input);
-            /*this.removeAllTabs();
-            if (this.getTab("Preview" + this.iterator) === undefined) {
-                var curTab = new PreviewTab(this.model);
-                curTab.setUniqID(this.iterator);
-                this.appendTab(curTab);
-            }
-            if (this.getTab("DOM" + this.iterator) === undefined) {
-                var curTab = new DomTab();
-                curTab.setUniqID(this.iterator);
-                this.appendTab(curTab);
-            }
-            //var homeTab = this.getTab("Home");
-            var previewTab = this.getTab("Preview" + this.iterator);
-            var domTab = this.getTab("DOM" + this.iterator);*/
-            //var curContent = $('.js-ajaxTabContent[data-tab-id="' + this.iterator + '"]').last().get(0);
-            //this.initialize(curContent, input);
-            /*if (previewTab) {
-                this.selectTab(previewTab);
-            }*/
-
-            //return input;
-            /*
-            //Trace.log(input);
-            if (input) {
-                if (previewTab)
-                {
-                    // xxxHonza: this should be smarter.
-                    // Make sure the tab is rendered now.
-                    try
-                    {
-                        previewTab.select();
-                        previewTab.append(input);
-                    }
-                    catch (err)
-                    {
-                        Trace.exception("HarView.appendPreview; EXCEPTION ", err);
-                        if (err.errors && previewTab)
-                            previewTab.appendError(err);
-                    }
-                }
-
-                // The input JSON is displayed in the DOM/HAR tab anyway, at least to
-                // allow easy inspection of the content.
-                // Btw. this makes HAR Viewer an effective JSON Viewer, but only if validation
-                // is switched off, otherwise HarModel.parse() throws an exception.
-                if (domTab)
-                    domTab.append(input);
-            }*/
+            input = this.model.toJSON(input);
+            this.model.input = null;
+            return input;
         }
         catch (err)
         {
             Trace.exception("HarView.appendPreview; EXCEPTION ", err);
-            if (err.errors && previewTab)
-                previewTab.appendError(err);
-
-            // xxxHonza: display JSON tree even if validation throws an exception
-            if (err.input)
-                domTab.append(err.input);
         }
-
-        // Select the preview tab in any case.
-        //previewTab.select();
-
-        // HAR loaded, parsed and appended into the UI, let's shut down the progress.
-        /*if (homeTab)
-            homeTab.loadInProgress(false);*/
-
-        Lib.fireEvent(content, "onViewerHARLoaded");
     },
 
     onLoadError: function(jqXHR, textStatus, errorThrown)
     {
-        var homeTab = this.getTab("Home");
+        /*var homeTab = this.getTab("Home");
         if (homeTab)
-            homeTab.loadInProgress(true, jqXHR.statusText);
+            homeTab.loadInProgress(true, jqXHR.statusText);*/
 
         Trace.error("harModule.loadRemoteArchive; ERROR ", jqXHR, textStatus, errorThrown);
     },
