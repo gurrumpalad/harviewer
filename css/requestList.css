@@ -168,9 +168,33 @@
 
 /*************************************************************************************************/
 
+/* Column Customization */
+
+.netCol {
+    display: none;
+}
+
+/* The options column is always visible */
+.netCol.netOptionsCol {
+    display: table-cell;
+}
+
+div[previewcols~=index] .netIndexCol,
+div[previewcols~=url] .netHrefCol,
+div[previewcols~=status] .netStatusCol,
+div[previewcols~=domain] .netDomainCol,
+div[previewcols~=serverIPAddress] .netServerIPAddressCol,
+div[previewcols~=connection] .netConnectionCol,
+div[previewcols~=size] .netSizeCol,
+div[previewcols~=timeline] .netTimeCol,
+div[previewcols~=type] .netTypeCol {
+    display: table-cell;
+}
+
 .netTimelineBar {
     position: relative;
     border-right: 50px solid transparent;
+    overflow: hidden;
 }
 
 .netBlockingBar {
@@ -454,28 +478,7 @@
 }
 
 /*************************************************************************************************/
-/* Column Customization */
 
-.netCol {
-    display: none;
-}
-
-/* The options column is always visible */
-.netCol.netOptionsCol {
-    display: table-cell;
-}
-
-div[previewcols~=index] .netIndexCol,
-div[previewcols~=url] .netHrefCol,
-div[previewcols~=status] .netStatusCol,
-div[previewcols~=domain] .netDomainCol,
-div[previewcols~=serverIPAddress] .netServerIPAddressCol,
-div[previewcols~=connection] .netConnectionCol,
-div[previewcols~=size] .netSizeCol,
-div[previewcols~=timeline] .netTimeCol,
-div[previewcols~=type] .netTypeCol {
-    display: table-cell;
-}
 /*
  .netIndexCol,
  .netHrefCol,

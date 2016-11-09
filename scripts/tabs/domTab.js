@@ -92,6 +92,11 @@ DomTab.prototype = domplate(TabView.Tab.prototype,
     // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
     // Tab
 
+    setUniqID: function(id)
+    {
+        this.id = this.id + id;
+    },
+
     onUpdateBody: function(tabView, body)
     {
         this.toolbar.render(Lib.$(body, "domToolbar"));

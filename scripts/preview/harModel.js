@@ -77,6 +77,55 @@ HarModel.prototype =
         return this.input;
     },
 
+    removeHar: function(input) {
+        //Trace.log(this.input);
+        if (!input)
+        {
+            Trace.error("HarModel.removeHar; Trying to remove null input!");
+            return;
+        }
+
+        // Sort all requests according to the start time.
+        input.log.entries.sort(function(a, b)
+        {
+            var timeA = Lib.parseISO8601(a.startedDateTime);
+            var timeB = Lib.parseISO8601(b.startedDateTime);
+
+            if (timeA < timeB)
+                return -1;
+            else if (timeA > timeB)
+                return 1;
+
+            return 0;
+        });
+
+        if (this.input)
+        {
+            if (input.log.pages)
+            {
+                for (var i=0; i<input.log.pages.length; i++)
+                    this.removePage(input.log.pages[i]);
+            }
+            else
+            {
+                Trace.error("Import of additional data without a page is not yet supported.");
+                //xxxHonza: how to properly import data with no page?
+                //for (var i=0; i<input.log.entries.length; i++)
+                //    this.input.log.entries.push(input.log.entries[i]);
+                return null;
+            }
+        }
+        else
+        {
+            this.input = null;
+        }
+        if (this.input.log.pages[0] === undefined && this.input.log.pages.length <= 1) {
+            this.input = null;
+        }
+
+        return this.input;//this.toJSON(this.input);
+    },
+
     // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
     // Pages
 
@@ -133,6 +182,49 @@ HarModel.prototype =
                 entry.pageref = pageId;
                 this.input.log.entries.push(entry);
             }
+        }
+    },
+
+    removePage: function(page)
+    {
+        if (this.input) {
+            var pageTitle = page.title;
+            var pageStart = page.startedDateTime;
+            for (var i = 0; i < this.input.log.pages.length; i++) {
+                var curPageTitle = this.input.log.pages[i].title;
+                var curPageStart = this.input.log.pages[i].startedDateTime;
+                if (
+                    curPageStart
+                    && curPageTitle
+                    && curPageStart == pageStart
+                    && curPageTitle == pageTitle
+                ) {
+                    var pageId = this.input.log.pages[i].id;
+                    if (this.input.log.entries) {
+                        for (var j = 0; j < this.input.log.entries.length; j++) {
+                            if (this.input.log.entries[j].pageref === pageId) {
+                                this.input.log.entries[j] = null;
+                            }
+                        }
+                    }
+                    this.input.log.pages[i] = null;
+                    break;
+                }
+            }
+            var tempPages = [];
+            for (var k = 0; k < this.input.log.pages.length; k++) {
+                if (this.input.log.pages[k]) {
+                    tempPages.push(this.input.log.pages[k]);
+                }
+            }
+            this.input.log.pages = tempPages;
+            var tempEntry = [];
+            for (var l = 0; l < this.input.log.entries.length; l++) {
+                if (this.input.log.entries[l]) {
+                    tempEntry.push(this.input.log.entries[l]);
+                }
+            }
+            this.input.log.entries = tempEntry;
         }
     },
 

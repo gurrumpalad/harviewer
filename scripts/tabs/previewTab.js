@@ -59,6 +59,10 @@ PreviewTab.prototype = Lib.extend(TabView.Tab.prototype,
 
     // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
     // Tab
+    setUniqID: function(id)
+    {
+        this.id = this.id + id;
+    },
 
     onUpdateBody: function(tabView, body)
     {
@@ -126,14 +130,15 @@ PreviewTab.prototype = Lib.extend(TabView.Tab.prototype,
                 label: Strings.clearButton,
                 tooltiptext: Strings.clearTooltip,
                 command: Lib.bindFixed(this.onClear, this)
+            },
+            {
+                id: "download",
+                tooltiptext: Strings.downloadTooltip,
+                className: "harDownloadButton"
             }
         ];
 
-        buttons.push({
-            id: "download",
-            tooltiptext: Strings.downloadTooltip,
-            className: "harDownloadButton"
-        });
+        //buttons.push();
 
         return buttons;
     },

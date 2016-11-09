@@ -120,6 +120,11 @@ TabView.prototype =
         }
     },
 
+    removeAllTabs: function()
+    {
+        this.tabs = [];
+    },
+
     getTab: function(tabId)
     {
         for (var i = 0; i < this.tabs.length; i++) {

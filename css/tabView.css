@@ -72,6 +72,8 @@
 .tabBody[selected="true"],
 .tabBody.selected {
     display: block;
+    width: 100%;
+    position: relative;
 }
 
 /*************************************************************************************************/

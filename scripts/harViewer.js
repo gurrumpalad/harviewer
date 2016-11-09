@@ -21,24 +21,25 @@ define("harViewer", [
 function(TabView, HomeTab, AboutTab, PreviewTab, SchemaTab, DomTab, HarModel,
     Loader, Strings, RequestList, Lib, Trace) {
 
-var content = document.getElementsByClassName("js-ajaxTabContent").item(document.getElementsByClassName("js-ajaxTabContent").length - 1);
+var contents = document.getElementsByClassName("js-ajaxTabContent");//.item(document.getElementsByClassName("js-ajaxTabContent").length - 1);
+
 //document.getElementById("content");
 
 // ********************************************************************************************* //
 // The Application
 
-function HarView()
+function HarView(i)
 {
     this.id = "harView";
-
+    this.iterator = i;
     // Location of the model (all tabs see its parent and so the model).
     this.model = new HarModel();
 
     // Append tabs
     //this.appendTab(new HomeTab());
-    this.appendTab(new PreviewTab(this.model));
+
     //this.appendTab(new PreviewTab(this.model));
-    this.appendTab(new DomTab());
+
     //this.appendTab(new AboutTab());
     //this.appendTab(new SchemaTab());
 }
@@ -67,15 +68,26 @@ function HarView()
 HarView.prototype = Lib.extend(new TabView(),
 /** @lends HarView */
 {
-    initialize: function(content)
+    initialize: function(content, inputHar)
     {
+        this.removeAllTabs();
+        if (this.getTab("Preview" + this.iterator) === undefined) {
+            var curTab = new PreviewTab(this.model);
+            curTab.setUniqID(this.iterator);
+            this.appendTab(curTab);
+        }
+        if (this.getTab("DOM" + this.iterator) === undefined) {
+            var curTab = new DomTab();
+            curTab.setUniqID(this.iterator);
+            this.appendTab(curTab);
+        }
         // Global application properties.
         this.version = content.getAttribute("version");
         this.harSpecURL = "http://www.softwareishard.com/blog/har-12-spec/";
 
         this.render(content);
         //this.selectTabByName("Home");
-        this.selectTabByName("Preview");
+        this.selectTabByName("Preview" + this.iterator);
 
         // Auto load all HAR files specified in the URL.
         var okCallback = Lib.bind(this.appendPreview, this);
@@ -87,13 +99,16 @@ HarView.prototype = Lib.extend(new TabView(),
             if (homeTab)
                 homeTab.loadInProgress(true);
         }
+        if (inputHar) {
+            this.appendPreview(inputHar);
+        }
     },
 
     appendPreview: function(jsonString)
     {
-        var homeTab = this.getTab("Home");
-        var previewTab = this.getTab("Preview");
-        var domTab = this.getTab("DOM");
+        //var homeTab = this.getTab("Home");
+        var previewTab = this.getTab("Preview" + this.iterator);
+        var domTab = this.getTab("DOM" + this.iterator);
 
         try
         {
@@ -140,8 +155,102 @@ HarView.prototype = Lib.extend(new TabView(),
         previewTab.select();
 
         // HAR loaded, parsed and appended into the UI, let's shut down the progress.
-        if (homeTab)
-            homeTab.loadInProgress(false);
+        /*if (homeTab)
+            homeTab.loadInProgress(false);*/
+
+        Lib.fireEvent(content, "onViewerHARLoaded");
+    },
+
+    removeHarFile: function(jsonString)
+    {
+        /*this.removeAllTabs();
+        if (this.getTab("Preview" + this.iterator) === undefined) {
+            var curTab = new PreviewTab(this.model);
+            curTab.setUniqID(this.iterator);
+            this.appendTab(curTab);
+        }
+        if (this.getTab("DOM" + this.iterator) === undefined) {
+            var curTab = new DomTab();
+            curTab.setUniqID(this.iterator);
+            this.appendTab(curTab);
+        }*/
+        var previewTab = this.getTab("Preview" + this.iterator);
+        var domTab = this.getTab("DOM" + this.iterator);
+
+        try
+        {
+            var validate = false;//$("#validate").prop("checked");
+            var input = HarModel.parse(jsonString, validate);
+            input = this.model.removeHar(input);
+            this.model.input = input;
+            Trace.log(input);
+            return this.model.toJSON(input);
+            /*this.removeAllTabs();
+            if (this.getTab("Preview" + this.iterator) === undefined) {
+                var curTab = new PreviewTab(this.model);
+                curTab.setUniqID(this.iterator);
+                this.appendTab(curTab);
+            }
+            if (this.getTab("DOM" + this.iterator) === undefined) {
+                var curTab = new DomTab();
+                curTab.setUniqID(this.iterator);
+                this.appendTab(curTab);
+            }
+            //var homeTab = this.getTab("Home");
+            var previewTab = this.getTab("Preview" + this.iterator);
+            var domTab = this.getTab("DOM" + this.iterator);*/
+            //var curContent = $('.js-ajaxTabContent[data-tab-id="' + this.iterator + '"]').last().get(0);
+            //this.initialize(curContent, input);
+            /*if (previewTab) {
+                this.selectTab(previewTab);
+            }*/
+
+            //return input;
+            /*
+            //Trace.log(input);
+            if (input) {
+                if (previewTab)
+                {
+                    // xxxHonza: this should be smarter.
+                    // Make sure the tab is rendered now.
+                    try
+                    {
+                        previewTab.select();
+                        previewTab.append(input);
+                    }
+                    catch (err)
+                    {
+                        Trace.exception("HarView.appendPreview; EXCEPTION ", err);
+                        if (err.errors && previewTab)
+                            previewTab.appendError(err);
+                    }
+                }
+
+                // The input JSON is displayed in the DOM/HAR tab anyway, at least to
+                // allow easy inspection of the content.
+                // Btw. this makes HAR Viewer an effective JSON Viewer, but only if validation
+                // is switched off, otherwise HarModel.parse() throws an exception.
+                if (domTab)
+                    domTab.append(input);
+            }*/
+        }
+        catch (err)
+        {
+            Trace.exception("HarView.appendPreview; EXCEPTION ", err);
+            if (err.errors && previewTab)
+                previewTab.appendError(err);
+
+            // xxxHonza: display JSON tree even if validation throws an exception
+            if (err.input)
+                domTab.append(err.input);
+        }
+
+        // Select the preview tab in any case.
+        //previewTab.select();
+
+        // HAR loaded, parsed and appended into the UI, let's shut down the progress.
+        /*if (homeTab)
+            homeTab.loadInProgress(false);*/
 
         Lib.fireEvent(content, "onViewerHARLoaded");
     },
@@ -210,15 +319,18 @@ HarView.prototype = Lib.extend(new TabView(),
 
 // ********************************************************************************************* //
 // Initialization
+if (contents.length > 0) {
+    for (var i = 0; i < contents.length; i++) {
+        var content = contents.item(i);
+        var harView = content.repObject = new HarView(i+1);
 
-var harView = content.repObject = new HarView();
-
-// Fire some events for listeners. This is useful for extending/customizing the viewer.
-Lib.fireEvent(content, "onViewerPreInit");
-harView.initialize(content);
-Lib.fireEvent(content, "onViewerInit");
-
-Trace.log("HarViewer; initialized OK");
+        // Fire some events for listeners. This is useful for extending/customizing the viewer.
+        Lib.fireEvent(content, "onViewerPreInit");
+        harView.initialize(content);
+        Lib.fireEvent(content, "onViewerInit");
+        Trace.log("HarViewer" + i + "; initialized OK");
+    }
+}
 
 // ********************************************************************************************* //
 });

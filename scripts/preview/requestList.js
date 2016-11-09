@@ -407,10 +407,13 @@ RequestList.setVisibleColumns = function(cols, avoidCookies)
     if (cols.join)
         cols = cols.join(" ");
 
-    var content = document.getElementsByClassName("js-ajaxTabContent").item(document.getElementsByClassName("js-ajaxTabContent").length - 1);
+    var content = document.getElementsByClassName("js-ajaxTabContent");
     //document.getElementById("content");
-    if (content)
-        content.setAttribute("previewCols", cols);
+    if (content.length > 0) {
+        for (var i = 0; i < content.length; i++) {
+            content.item(i).setAttribute("previewCols", cols);
+        }
+    }
 
     // Update cookie
     if (!avoidCookies)
@@ -1029,12 +1032,21 @@ RequestList.prototype = domplate(
                 receivingBar.style.left = this.barOffset + "%";
 
             // Sets width of all bars (using style). The width is computed according to measured timing.
-            blockingBar.style.width = this.barBlockingWidth + "%";
-            resolvingBar.style.width = this.barResolvingWidth + "%";
-            connectingBar.style.width = this.barConnectingWidth + "%";
-            sendingBar.style.width = this.barSendingWidth + "%";
-            waitingBar.style.width = this.barWaitingWidth + "%";
-            receivingBar.style.width = this.barReceivingWidth + "%";
+            blockingBar.style.width = ( this.barBlockingWidth) + "%";
+            resolvingBar.style.width = ( this.barResolvingWidth) + "%";
+            connectingBar.style.width = ( this.barConnectingWidth) + "%";
+            sendingBar.style.width = ( this.barSendingWidth) + "%";
+            waitingBar.style.width = ( this.barWaitingWidth) + "%";
+            receivingBar.style.width = ( this.barReceivingWidth) + "%";
+
+
+            /*blockingBar.style.width = (this.barBlockingWidth > 100 ? this.barBlockingWidth - 100 : this.barBlockingWidth) + "%";
+            resolvingBar.style.width = (this.barResolvingWidth > 100 ? this.barResolvingWidth - 100 : this.barResolvingWidth) + "%";
+            connectingBar.style.width = (this.barConnectingWidth > 100 ? this.barConnectingWidth - 100 : this.barConnectingWidth) + "%";
+            sendingBar.style.width = (this.barSendingWidth > 100 ? this.barSendingWidth - 100 : this.barSendingWidth) + "%";
+            waitingBar.style.width = (this.barWaitingWidth > 100 ? this.barWaitingWidth - 100 : this.barWaitingWidth) + "%";
+            receivingBar.style.width = (this.barReceivingWidth > 100 ? this.barReceivingWidth - 100 : this.barReceivingWidth) + "%";
+            */
 
             // Remove all existing timing bars first. The UI can be relayouting at this moment
             // (can happen if break layout is executed).

@@ -50,21 +50,40 @@ header("Content-Type: text/html; charset=utf-8");
 </head>
 <body class="js-ajaxListener">
     <div class="Wrapper">
-        <div class="FilterWrapper">
-            <? if (!empty($arResult['FILTER_DIR'])) { ?>
+        <div class="Frame">
+            <div class="FilterWrapper">
+                <? if (!empty($arResult['FILTER_DIR'])) { ?>
                 <div class="Filter js-ajaxForm" data-tab-id="1">
+                    <span class="Filter__label">Список HAR файлов:</span>
                     <div class="FileList js-fileItems"></div>
-                    <span class="Filter__label">Путь</span>
+                    <span class="Filter__label">Добавить файл:<?=!empty($SUB_DIR) ? ' (каталог ' . $SUB_DIR . '/)' : ''?></span>
                     <?=$arResult['FILTER_DIR']?>
                 </div>
-            <? } ?>
+                <? } ?>
+            </div>
+            <div class="Content">
+                <? if (!empty($arResult['FILTER_DIR'])) { ?>
+                <div class="Content__tab js-ajaxTabContent" data-tab-id="1"></div>
+                <? } ?>
+            </div>
+        </div>
+        <!--<div class="Frame">
+            <div class="FilterWrapper">
+                <? if (!empty($arResult['FILTER_DIR'])) { ?>
+                    <div class="Filter js-ajaxForm" data-tab-id="2">
+                        <div class="FileList js-fileItems"></div>
+                        <span class="Filter__label">Путь</span>
+                        <?=$arResult['FILTER_DIR']?>
+                    </div>
+                <? } ?>
 
-        </div>
-        <div class="Content">
-            <? if (!empty($arResult['FILTER_DIR'])) { ?>
-            <div class="Content__tab js-ajaxTabContent" data-tab-id="1"></div>
-            <? } ?>
-        </div>
+            </div>
+            <div class="Content">
+                <? if (!empty($arResult['FILTER_DIR'])) { ?>
+                    <div class="Content__tab js-ajaxTabContent" data-tab-id="2"></div>
+                <? } ?>
+            </div>
+        </div>-->
     </div>
     <script src="scripts/jquery.js"></script>
     <script src="scripts/script.js"></script>
