@@ -56,9 +56,9 @@
 /*************************************************************************************************/
 
 .harViewBodies {
-    position: absolute;
-    top: 33px;
-    bottom: 0px;
+    /*position: absolute;
+    top: 5px;
+    bottom: 0px;*/
 }
 
 .harViewBar > .tab {

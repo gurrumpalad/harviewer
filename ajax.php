@@ -20,7 +20,9 @@ if (isset($_REQUEST['ajax'])) {
             foreach ($arPaths as $key => $arPath) {
                 if ($key > 1) {
                     if (!is_dir($DOCUMENT_ROOT . $_REQUEST['DIR'] . '/' . $arPath)) {
-                        $arFiles[] = $arPath;
+                        if (preg_match('~\.(har|harp)$~', $arPath)) {
+                            $arFiles[] = $arPath;
+                        }
                         unset($arPaths[$key]);
                     }
                 } else {

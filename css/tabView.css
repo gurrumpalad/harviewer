@@ -7,8 +7,11 @@
 }
 
 .tabViewCol {
-    background: url(images/timeline-sprites.png) repeat-x scroll 0 -112px #FFFFFF;
+    /*background: url(images/timeline-sprites.png) repeat-x scroll 0 -112px #FFFFFF;*/
     vertical-align:top;
+    padding: 0;
+    position: relative;
+    width: 100%;
 }
 
 .tabViewBody {
@@ -19,6 +22,8 @@
     padding-left: 14px;
     border-bottom: 1px solid #D7D7D7;
     white-space: nowrap;
+    visibility: hidden;
+    height: 1px;
 }
 
 .tab {

@@ -280,7 +280,7 @@ div[previewcols~=type] .netTypeCol {
     opacity: 0.5;
     display: none;
     background-color: green;
-
+    box-sizing: padding-box;
     /* The vertical line crosses bottom row border */
     margin-bottom: -1px;
 

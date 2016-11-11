@@ -50,41 +50,52 @@ header("Content-Type: text/html; charset=utf-8");
 </head>
 <body class="js-ajaxListener">
     <div class="Wrapper">
-        <div class="Frame">
-            <div class="FilterWrapper">
-                <? if (!empty($arResult['FILTER_DIR'])) { ?>
-                <div class="Filter js-ajaxForm" data-tab-id="1">
-                    <span class="Filter__label">Список HAR файлов:</span>
-                    <div class="FileList js-fileItems"></div>
-                    <span class="Filter__label">Добавить файл:<?=!empty($SUB_DIR) ? ' (каталог ' . $SUB_DIR . '/)' : ''?></span>
-                    <?=$arResult['FILTER_DIR']?>
+        <div class="FrameWrapper">
+            <div class="Frame Frame--2">
+                <div class="FilterWrapper">
+                    <? if (!empty($arResult['FILTER_DIR'])) { ?>
+                    <div class="Filter js-ajaxForm" data-tab-id="1">
+                        <span class="Filter__label">Добавить файл:<?=!empty($SUB_DIR) ? ' (каталог ' . $SUB_DIR . '/)' : ''?></span>
+                        <?=$arResult['FILTER_DIR']?>
+                        <span class="Filter__label">Список выбранных файлов:</span>
+                        <div class="FileList js-fileItems"></div>
+
+                    </div>
+                    <? } ?>
+                    <button class="js-testPreview">Тест preview</button>
+                    <button class="js-testHar">Тест har</button>
+                    <button class="js-testFile">Тест файл</button>
                 </div>
-                <? } ?>
-                <button class="js-test">Тест</button>
-            </div>
-            <div class="Content">
-                <? if (!empty($arResult['FILTER_DIR'])) { ?>
-                <div class="Content__tab js-ajaxTabContent" data-tab-id="1"></div>
-                <? } ?>
+                <div class="Content">
+                    <? if (!empty($arResult['FILTER_DIR'])) { ?>
+                    <div class="Content__tab js-ajaxTabContent" data-tab-id="1"></div>
+                    <? } ?>
+                </div>
+
+            </div><div class="Frame Frame--2">
+                <div class="FilterWrapper">
+                    <? if (!empty($arResult['FILTER_DIR'])) { ?>
+                    <div class="Filter js-ajaxForm" data-tab-id="2">
+                        <span class="Filter__label">Добавить файл:<?=!empty($SUB_DIR) ? ' (каталог ' . $SUB_DIR . '/)' : ''?></span>
+                        <?=$arResult['FILTER_DIR']?>
+                        <span class="Filter__label">Список выбранных файлов:</span>
+                        <div class="FileList js-fileItems"></div>
+
+                    </div>
+                    <? } ?>
+                    <button class="js-testPreview">Тест preview</button>
+                    <button class="js-testHar">Тест har</button>
+                    <button class="js-testFile">Тест файл</button>
+
+                </div>
+                <div class="Content">
+                    <? if (!empty($arResult['FILTER_DIR'])) { ?>
+                        <div class="Content__tab js-ajaxTabContent" data-tab-id="2"></div>
+                    <? } ?>
+                </div>
             </div>
         </div>
-        <!--<div class="Frame">
-            <div class="FilterWrapper">
-                <? if (!empty($arResult['FILTER_DIR'])) { ?>
-                    <div class="Filter js-ajaxForm" data-tab-id="2">
-                        <div class="FileList js-fileItems"></div>
-                        <span class="Filter__label">Путь</span>
-                        <?=$arResult['FILTER_DIR']?>
-                    </div>
-                <? } ?>
-
-            </div>
-            <div class="Content">
-                <? if (!empty($arResult['FILTER_DIR'])) { ?>
-                    <div class="Content__tab js-ajaxTabContent" data-tab-id="2"></div>
-                <? } ?>
-            </div>
-        </div>-->
+        <div class="Footer">&copy;<?=date('Y');?> ИНТ ООО САМСОН ОПТ</div>
     </div>
     <script src="scripts/jquery.js"></script>
     <script src="scripts/downloadify/js/swfobject.js"></script>

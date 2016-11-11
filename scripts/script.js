@@ -144,6 +144,42 @@ $(document).ready(function(){
                 console.log(pages);
             }
         });
+        $('.js-ajaxListener').on('click', '.js-testPreview', function () {
+            var tabObj = $('.js-ajaxTabContent[data-tab-id="1"]').last().get(0).repObject;
+            if (tabObj) {
+                var previewTab = tabObj.getTab("Preview1");
+                previewTab.select();
+            }
+        });
+        $('.js-ajaxListener').on('click', '.js-testHar', function () {
+            var tabObj = $('.js-ajaxTabContent[data-tab-id="1"]').last().get(0).repObject;
+            if (tabObj) {
+                var previewTab = tabObj.getTab("DOM1");
+                previewTab.select();
+                //tabObj.model.input;
+                //console.log(pages);
+            }
+        });
+        $('.js-ajaxListener').on('click', '.js-testFile', function () {
+            var tabObj = $('.js-ajaxTabContent[data-tab-id="1"]').last().get(0).repObject;
+            var form = $('.js-ajaxForm');
+            var tabID = form.attr('data-tab-id');
+            var elem = $(this);
+            var fileItems = form.find('.js-fileItems');
+
+            if (tabObj) {
+                try {
+                    $.getJSON('/hars/mg/2016/11/07/result.har', function(input){
+                        tabObj.appendPreview(input);
+                        fileItems.append('<div class="FileItem js-fileItem" data-file-path="' + '/hars/mg/2016/11/07/result.har' + '">' + '/hars/mg/2016/11/07/result.har' + '<div class="FileItem__remove js-fileRemove">Удалить</div></div>');
+                        form.find('.js-checkFile:first').nextAll('.js-checkFile, .js-viewFile').remove();
+                    });
+                } catch (e) {
+                    console.log(e);
+                }
+            }
+
+        });
     }
     /*if ($(".harDownloadButton").length > 0) {
         $(".harDownloadButton").downloadify({

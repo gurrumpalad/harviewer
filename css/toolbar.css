@@ -5,8 +5,9 @@
     font-size: 11px;
     font-weight: 400;
     font-style: normal;
-    border-bottom: 1px solid #EEEEEE;
+    /*border-bottom: 1px solid #EEEEEE;*/
     padding: 0 3px 0 3px;
+    margin-bottom: 15px;
 }
 
 .toolbarButton,
@@ -38,20 +39,36 @@
 
 .toolbarButton.text,
 .toolbarSeparator {
-    margin: 3px 0 3px 0;
+    background-color: #fff;
+    background-image: none;
+    border: 1px solid #e5e5e5;
+    color: #4078c0;
+    padding: 6px 12px;
+    margin-right: 8px;
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 17px;
+    /*margin: 3px 0 3px 0;
     padding: 3px;
-    border: 1px solid transparent;
+    border: 1px solid transparent;*/
+}
+.toolbarSeparator {
+    display: none;
 }
 
 .toolbarButton.text:hover {
-    background: url(images/bg-button.gif) repeat-x scroll 0 0 #FFFFFF;
+    background-color: #4078c0;
+    background-image: none;
+    border-color: #4078c0;
+    color: #fff;
+    /*background: url(images/bg-button.gif) repeat-x scroll 0 0 #FFFFFF;
     border-top:1px solid #bbb;
     border-bottom:1px solid #aaa;
     border-left:1px solid #bbb;
     border-right:1px solid #aaa;
     -moz-border-radius: 3px;
     -webkit-border-radius: 3px;
-    border-radius: 3px;
+    border-radius: 3px;*/
 }
 
 .toolbarButton.text:active {

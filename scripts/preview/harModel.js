@@ -78,7 +78,6 @@ HarModel.prototype =
     },
 
     removeHar: function(input) {
-        //Trace.log(this.input);
         if (!input)
         {
             Trace.error("HarModel.removeHar; Trying to remove null input!");
@@ -104,18 +103,11 @@ HarModel.prototype =
             if (input.log.pages)
             {
                 for (var i=0; i < input.log.pages.length; i++) {
-                    Trace.log("current delete page");
-                    Trace.log(input.log.pages[i]);
                     this.removePage(input.log.pages[i]);
                 }
-
             }
             else
             {
-                Trace.error("Import of additional data without a page is not yet supported.");
-                //xxxHonza: how to properly import data with no page?
-                //for (var i=0; i<input.log.entries.length; i++)
-                //    this.input.log.entries.push(input.log.entries[i]);
                 return null;
             }
         }
@@ -127,7 +119,7 @@ HarModel.prototype =
             this.input = null;
         }
 
-        return this.input;//this.toJSON(this.input);
+        return this.input;
     },
 
     // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -197,10 +189,6 @@ HarModel.prototype =
             for (var i = 0; i < this.input.log.pages.length; i++) {
                 var curPageTitle = this.input.log.pages[i].title;
                 var curPageStart = this.input.log.pages[i].startedDateTime;
-                Trace.log(pageTitle);
-                Trace.log(pageStart);
-                Trace.log(curPageTitle);
-                Trace.log(curPageStart);
                 if (
                     curPageStart
                     && curPageTitle
@@ -208,7 +196,6 @@ HarModel.prototype =
                     && curPageTitle == pageTitle
                 ) {
                     var pageId = this.input.log.pages[i].id;
-                    Trace.log('rem page ' + pageId);
                     if (this.input.log.entries) {
                         for (var j = 0; j < this.input.log.entries.length; j++) {
                             if (this.input.log.entries[j].pageref === pageId) {
@@ -218,7 +205,6 @@ HarModel.prototype =
                         }
                     }
                     this.input.log.pages[i] = null;
-                    Trace.log('now page ' + this.input.log.pages[i]);
                     break;
                 }
             }
@@ -236,8 +222,6 @@ HarModel.prototype =
                 }
             }
             this.input.log.entries = tempEntry;
-            Trace.log('this.input after remove ');
-            Trace.log(this.input);
         }
     },
 
