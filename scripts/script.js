@@ -41,12 +41,13 @@ function ReloadAjaxContent(url, objSend, isSetHistory, callback)
     });
 }
 
-function GetPath(elem) {
-    $(elem).nextAll('.js-checkFile, .js-viewFile').remove();
-    if ($(elem).val() && $(elem).val() != '') {
+function GetPath(container, elem) {
+    if ($(elem).attr('data-path') && $(elem).attr('data-path').length > 0) {
+        $(container).html('');
+        $('.js-pathContent').append('<span class="Folder__path js-path" data-path="' + $(elem).attr('data-path') + '">' + $(elem).text() + '</span>');
         var objSend = {
             'ajax' : 'Y',
-            'DIR' : $(elem).val()
+            'DIR' : $(elem).attr('data-path')
         };
         //var form = $(elem).parents('.js-ajaxForm');
         var elem = $(elem);
@@ -89,10 +90,10 @@ $(document).ready(function(){
         /*$('.js-ajaxListener').on('change', '.js-ajaxForm .js-checkFile', function(){
             //GetPath($(this));
         });*/
-        $('.js-ajaxListener').on('click', '.js-ajaxForm .js-checkFile option', function(){
-            GetPath($(this).parents('.js-checkFile'));
+        $('.js-ajaxListener').on('click', '.js-ajaxForm .js-folderContent .js-folderItem', function(){
+            GetPath($(this).parents('.js-folderContent'), $(this));
         });
-        $('.js-ajaxListener').on('change', '.js-ajaxForm .js-viewFile', function(){
+        $('.js-ajaxListener').on('change', '.js-folderContent .js-folderItem', function(){
             if ($(this).val() && $(this).val() != '') {
                 var form = $(this).parents('.js-ajaxForm');
                 var tabID = form.attr('data-tab-id');

@@ -6,7 +6,8 @@ if (!empty(__DIR__)) {
 }
 
 $arResult = array(
-    'FILTER_DIR' => ''
+    'DIRS' => array(),
+    'FILES' => array()
 );
 if (is_dir($DOCUMENT_ROOT . $SUB_DIR)) {
     $arPaths = scandir($DOCUMENT_ROOT . $SUB_DIR);
@@ -14,7 +15,9 @@ if (is_dir($DOCUMENT_ROOT . $SUB_DIR)) {
     foreach ($arPaths as $key => $arPath) {
         if ($key > 1) {
             if (!is_dir($DOCUMENT_ROOT . $SUB_DIR . '/' . $arPath)) {
-                $arFiles[] = $arPath;
+                if (preg_match('~\.(har|harp)$~', $arPath)) {
+                    $arResult['FILES'][] = $arPath;
+                }
                 unset($arPaths[$key]);
             }
         } else {
@@ -22,22 +25,13 @@ if (is_dir($DOCUMENT_ROOT . $SUB_DIR)) {
         }
     }
     if (!empty($arPaths)) {
-        $html = '<select class="Filter__folder js-checkFile"><option value="" selected="selected">Не выбрано</option>';
         foreach ($arPaths as $path) {
-            $html .= '<option value="' . $SUB_DIR . '/'  . $path . '">' . $path . '</option>';
+            $arResult['DIRS'][] = $path;
+
         }
-        $html .= '</select>';
-        $arResult['FILTER_DIR'] = $html;
-    } elseif (!empty($arFiles)) {
-        $html = '<select class="Filter__folder js-viewFile"><option value="" selected="selected">Не выбрано</option>';
-        foreach ($arFiles as $path) {
-            $html .= '<option value="' . $SUB_DIR . '/' . $path . '">' . $path . '</option>';
-        }
-        $html .= '</select>';
-        $arResult['FILTER_DIR'] = $html;
     }
 }
-
+$SUB_DIR = str_replace('/', '', $SUB_DIR);
 //сделать: добавление глобального таба с инпутами, выгрузка с использованием har.js
 header("Content-Type: text/html; charset=utf-8");
 ?>
@@ -55,11 +49,17 @@ header("Content-Type: text/html; charset=utf-8");
                 <div class="FilterWrapper">
                     <? if (!empty($arResult['FILTER_DIR'])) { ?>
                     <div class="Filter js-ajaxForm" data-tab-id="1">
-                        <span class="Filter__label">Добавить файл:<?=!empty($SUB_DIR) ? ' (каталог ' . $SUB_DIR . '/)' : ''?></span>
-                        <?=$arResult['FILTER_DIR']?>
-                        <span class="Filter__label">Список выбранных файлов:</span>
+                        <span class="Filter__label Filter__label--folder js-pathContent">Добавить файл:<span class="Folder__path js-path" data-path="/<?=$SUB_DIR?>"><?=!empty($SUB_DIR) ? $SUB_DIR : ''?></span></span>
+                        <!--<?=$arResult['FILTER_DIR']?>-->
+                        <div class="Filter__folder js-folderContent">
+                            <? foreach ($arResult['DIRS'] as $path) { ?>
+                            <div class="Folder__item js-folderItem" data-path="/<?=$path?>">
+                                <div class="Folder__name"><?=$path?></div>
+                            </div>
+                            <? } ?>
+                        </div>
+                        <span class="Filter__label Filter__label--file">Список выбранных файлов:</span>
                         <div class="FileList js-fileItems"></div>
-
                     </div>
                     <? } ?>
                     <button class="js-testPreview">Тест preview</button>
