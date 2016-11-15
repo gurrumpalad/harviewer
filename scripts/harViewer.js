@@ -5,10 +5,7 @@
  */
 define("harViewer", [
     "domplate/tabView",
-    /*"tabs/homeTab",*/
-    /*"tabs/aboutTab",*/
     "tabs/previewTab",
-    /*"tabs/schemaTab",*/
     "tabs/domTab",
     "preview/harModel",
     "preview/harModelLoader",
@@ -18,7 +15,7 @@ define("harViewer", [
     "core/trace"
 ],
 
-function(TabView, /*HomeTab, AboutTab,*/ PreviewTab, /*SchemaTab,*/ DomTab, HarModel,
+function(TabView,  PreviewTab, DomTab, HarModel,
     Loader, Strings, RequestList, Lib, Trace) {
 
 var contents = document.getElementsByClassName("js-ajaxTabContent");//.item(document.getElementsByClassName("js-ajaxTabContent").length - 1);

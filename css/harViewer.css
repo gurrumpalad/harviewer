@@ -20,16 +20,13 @@
 @import url("validationError.css");
 
 /* Application Tabs */
-@import url("aboutTab.css");
-@import url("homeTab.css");
+
 @import url("domTab.css");
-@import url("schemaTab.css");
 @import url("previewTab.css");
 @import url("search.css");
 
 /* Syntax Highlighter */
 @import url("SyntaxHighlighter.css");
 
-@import url("dragdrop.css");
 
 @import url("main.css");

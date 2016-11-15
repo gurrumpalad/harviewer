@@ -31,6 +31,7 @@
 .Frame.Frame--2 {
     width: 49.99%;
     display: inline-block;
+    border-right: 1px solid #e5e5e5;
 }
 .FilterWrapper {
     width: 100%;
@@ -43,7 +44,7 @@
 
 .Filter {
     display: block;
-    height: 250px;
+    height: 252px;
     /*overflow: auto;*/
 }
 
@@ -59,7 +60,7 @@
 
 .FileList {
     display: block;
-    height: 65px;
+    height: 70px;
     overflow: auto;
     width: 100%;
     background-color: #fff;
@@ -78,7 +79,6 @@
 }
 
 .FileItem {
-    display: inline-block;
     padding-left: 5px;
     width: 100%;
     text-align: left;
@@ -204,8 +204,8 @@
     position: relative;
     width: 100%;
     padding: 15px;
-    min-height: 480px;
-    border: 1px solid #e5e5e5;
+    min-height: 400px;
+    border-top: 1px solid #e5e5e5;
 }
 .Content__tab {
     width: 100%;
@@ -226,4 +226,46 @@
     padding-bottom: 40px;
     padding-top: 40px;
     position: relative;
+}
+
+.Frame--2 .pagePieTable {
+    display: table;
+    border-right: none;
+}
+
+.pageInfoRow .tabBar {
+    height: 25px;
+    visibility: visible;
+    white-space: normal;
+}
+
+.ViewButton {
+    background-color: #fff;
+    background-image: none;
+    border: 1px solid #e5e5e5;
+    color: #4078c0;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 16px;
+    margin-right: 12px;
+    padding: 5px 10px;
+}
+
+.ViewButton.active {
+    display: none;
+}
+
+.ViewButton:hover {
+    background-color: #4078c0;
+    background-image: none;
+    border-color: #4078c0;
+    color: #fff;
+}
+
+.ViewButton--second {
+    float: right;
+    position: absolute;
+    right: 4px;
+    top: 252px;
 }

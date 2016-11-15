@@ -43,8 +43,6 @@ function ReloadAjaxContent(url, objSend, isSetHistory, callback)
 
 function GetPath(container, elem) {
     if ($(elem).attr('data-path') && $(elem).attr('data-path').length > 0) {
-        $(container).html('');
-        $('.js-pathContent').append('<span class="Folder__path js-path" data-path="' + $(elem).attr('data-path') + '">' + $(elem).text() + '</span>');
         var objSend = {
             'ajax' : 'Y',
             'DIR' : $(elem).attr('data-path')
@@ -68,18 +66,25 @@ function GetPath(container, elem) {
             success: function(result) {
                 try {
                     result = JSON.parse(result);
+                    $(container).html('');
                 } catch (e) {
                     console.log(e);
                 }
-                if (result['html'] != null && result['html'].length > 0) {
-                    curTime = curTime + 300 - new Date();
-                    window.setTimeout(function(){
-                        //обновляем контент
-                        $(elem).nextAll('.js-checkFile').remove();
-                        $(elem).after(result['html']);
-                        //убираем загрузчик
-                        curTime = false;
-                    }, curTime > 0 ? curTime : 0);
+                if (result['dirs'] != null && result['dirs'].length > 0) {
+                    for (var i = 0; i < result['dirs'].length; i++) {
+                        if (result['dirs'][i] && result['dirs'][i]['path'] && result['dirs'][i]['value']) {
+                            var dirElem = '<div class="Folder__item js-folderItem" data-path="' + result['dirs'][i]['path'] + '"><div class="Folder__name">' + result['dirs'][i]['value'] + '</div></div>';
+                            $(container).append(dirElem);
+                        }
+                    }
+                }
+                if (result['files'] != null && result['files'].length > 0) {
+                    for (var i = 0; i < result['files'].length; i++) {
+                        if (result['files'][i] && result['files'][i]['path'] && result['files'][i]['value']) {
+                            var fileElem = '<div class="Folder__item js-fileItem" data-path="' + result['files'][i]['path'] + '"><div class="Folder__name">' + result['files'][i]['value'] + '</div></div>';
+                            $(container).append(fileElem);
+                        }
+                    }
                 }
             }
         });
@@ -87,25 +92,34 @@ function GetPath(container, elem) {
 }
 $(document).ready(function(){
     if ($('.js-ajaxForm').length > 0 && $('.js-ajaxListener').length > 0) {
+        var ajaxListener = $('.js-ajaxListener');
         /*$('.js-ajaxListener').on('change', '.js-ajaxForm .js-checkFile', function(){
             //GetPath($(this));
         });*/
-        $('.js-ajaxListener').on('click', '.js-ajaxForm .js-folderContent .js-folderItem', function(){
+        $(ajaxListener).on('click', '.js-ajaxForm .js-folderContent .js-folderItem', function(){
+            if ($(this).attr('data-path') && $(this).attr('data-path').length > 0) {
+                var headerElem = '<span class="Folder__path js-path" data-path="' + $(this).attr('data-path') + '">' + $(this).text() + '</span>';
+                $(this).parents('.js-ajaxForm').find('.js-pathContent').append(headerElem);
+            }
             GetPath($(this).parents('.js-folderContent'), $(this));
         });
-        $('.js-ajaxListener').on('change', '.js-folderContent .js-folderItem', function(){
-            if ($(this).val() && $(this).val() != '') {
+        //открытие файла
+        $(ajaxListener).on('click', '.js-folderContent .js-fileItem', function(){
+            if ($(this).attr('data-path') && $(this).attr('data-path') != '') {
                 var form = $(this).parents('.js-ajaxForm');
                 var tabID = form.attr('data-tab-id');
+                var path = $(this).attr('data-path');
+                var text = $(this).text();
                 var elem = $(this);
                 var fileItems = form.find('.js-fileItems');
                 var tabObj = $('.js-ajaxTabContent[data-tab-id="' + tabID + '"]').last().get(0).repObject;
                 if (tabObj) {
                     try {
-                        $.getJSON($(this).val(), function(input){
+                        $.getJSON(path, function(input){
                             tabObj.appendPreview(input);
-                            fileItems.append('<div class="FileItem js-fileItem" data-file-path="' + $(elem).val() + '">' + $(elem).val() + '<div class="FileItem__remove js-fileRemove">Удалить</div></div>');
-                            form.find('.js-checkFile:first').nextAll('.js-checkFile, .js-viewFile').remove();
+                            fileItems.append('<div class="FileItem js-fileItem" data-file-path="' + path + '">' + path + '<div class="FileItem__remove js-fileRemove">Удалить</div></div>');
+                            form.find('.js-path:first').nextAll('.js-path').remove();
+                            form.find('.js-path:first').get(0).click();
                         });
                     } catch (e) {
                         console.log(e);
@@ -113,7 +127,11 @@ $(document).ready(function(){
                 }
             }
         });
-        $('.js-ajaxListener').on('click', '.js-ajaxForm .js-fileRemove', function(){
+        $(ajaxListener).on('click', '.js-ajaxForm .js-path', function(){
+            GetPath($(this).parents('.js-ajaxForm').find('.js-folderContent'), $(this));
+            $(this).nextAll('.js-path').remove();
+        });
+        $(ajaxListener).on('click', '.js-ajaxForm .js-fileRemove', function(){
             var form = $(this).parents('.js-ajaxForm');
             var tabID = form.attr('data-tab-id');
             var filePath = $(this).parents('.js-fileItem').attr('data-file-path');
@@ -137,31 +155,50 @@ $(document).ready(function(){
                 }
             }
         });
-        $('.js-ajaxListener').on('click', '.js-test', function () {
-            console.log('click');
-            var tabObj = $('.js-ajaxTabContent[data-tab-id="1"]').last().get(0).repObject;
+        //переключение вида
+        $(ajaxListener).on('click', '.js-doubleView', function () {
+            $(this).hide();
+            $('.Frame').each(function(){
+                $(this).addClass('Frame--2').css('display', 'inline-block');
+            });
+            $('.js-singleView').show();
+        });
+        $(ajaxListener).on('click', '.js-singleView', function () {
+            $(this).hide();
+            $('.Frame').each(function(){
+                $(this).removeClass('Frame--2').css('display', 'block');
+            });
+            $('.Frame:last').hide();
+            $('.js-doubleView').show();
+        });
+        //~переключение вида
+        $(ajaxListener).on('click', '.js-viewStats', function () {
+            var toggle = $(this).parent().find('.js-viewToggle');
+            var tabID = $(this).attr('data-tab-id');
+            var tabObj = $('.js-ajaxTabContent[data-tab-id="' + tabID + '"]').last().get(0).repObject;
             if (tabObj) {
-                var pages = tabObj.model.input;
-                console.log(pages);
+                var previewTab = tabObj.getTab("Preview" + tabID);
+                if (previewTab) {
+                    toggle.toggleClass('active');
+                    previewTab.select();
+                }
+
             }
         });
-        $('.js-ajaxListener').on('click', '.js-testPreview', function () {
-            var tabObj = $('.js-ajaxTabContent[data-tab-id="1"]').last().get(0).repObject;
+        $(ajaxListener).on('click', '.js-viewToggle', function () {
+            $(this).parent().find('.js-viewToggle.active').removeClass('active');
+            $(this).addClass('active');
+            var tabID = $(this).attr('data-tab-id');
+            var tabName = $(this).attr('data-tab-name');
+            var tabObj = $('.js-ajaxTabContent[data-tab-id="' + tabID + '"]').last().get(0).repObject;
             if (tabObj) {
-                var previewTab = tabObj.getTab("Preview1");
-                previewTab.select();
+                var harTab = tabObj.getTab(tabName);
+                if (harTab) {
+                    harTab.select();
+                }
             }
         });
-        $('.js-ajaxListener').on('click', '.js-testHar', function () {
-            var tabObj = $('.js-ajaxTabContent[data-tab-id="1"]').last().get(0).repObject;
-            if (tabObj) {
-                var previewTab = tabObj.getTab("DOM1");
-                previewTab.select();
-                //tabObj.model.input;
-                //console.log(pages);
-            }
-        });
-        $('.js-ajaxListener').on('click', '.js-testFile', function () {
+        /*$(ajaxListener).on('click', '.js-testFile', function () {
             var tabObj = $('.js-ajaxTabContent[data-tab-id="1"]').last().get(0).repObject;
             var form = $('.js-ajaxForm');
             var tabID = form.attr('data-tab-id');
@@ -180,7 +217,7 @@ $(document).ready(function(){
                 }
             }
 
-        });
+        });*/
     }
     /*if ($(".harDownloadButton").length > 0) {
         $(".harDownloadButton").downloadify({

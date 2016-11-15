@@ -16,7 +16,10 @@ if (is_dir($DOCUMENT_ROOT . $SUB_DIR)) {
         if ($key > 1) {
             if (!is_dir($DOCUMENT_ROOT . $SUB_DIR . '/' . $arPath)) {
                 if (preg_match('~\.(har|harp)$~', $arPath)) {
-                    $arResult['FILES'][] = $arPath;
+                    $arResult['FILES'][] = array(
+                        'path' => $SUB_DIR . '/' . $arPath,
+                        'value' => $arPath
+                    );
                 }
                 unset($arPaths[$key]);
             }
@@ -26,8 +29,10 @@ if (is_dir($DOCUMENT_ROOT . $SUB_DIR)) {
     }
     if (!empty($arPaths)) {
         foreach ($arPaths as $path) {
-            $arResult['DIRS'][] = $path;
-
+            $arResult['DIRS'][] = array(
+                'path' => $SUB_DIR . '/' . $path,
+                'value' => $path
+            );
         }
     }
 }
@@ -45,53 +50,59 @@ header("Content-Type: text/html; charset=utf-8");
 <body class="js-ajaxListener">
     <div class="Wrapper">
         <div class="FrameWrapper">
-            <div class="Frame Frame--2">
+            <div class="Frame">
                 <div class="FilterWrapper">
-                    <? if (!empty($arResult['FILTER_DIR'])) { ?>
                     <div class="Filter js-ajaxForm" data-tab-id="1">
                         <span class="Filter__label Filter__label--folder js-pathContent">Добавить файл:<span class="Folder__path js-path" data-path="/<?=$SUB_DIR?>"><?=!empty($SUB_DIR) ? $SUB_DIR : ''?></span></span>
-                        <!--<?=$arResult['FILTER_DIR']?>-->
                         <div class="Filter__folder js-folderContent">
                             <? foreach ($arResult['DIRS'] as $path) { ?>
-                            <div class="Folder__item js-folderItem" data-path="/<?=$path?>">
-                                <div class="Folder__name"><?=$path?></div>
+                            <div class="Folder__item js-folderItem" data-path="<?=$path['path']?>">
+                                <div class="Folder__name"><?=$path['value']?></div>
                             </div>
+                            <? } ?>
+                            <? foreach ($arResult['FILES'] as $path) { ?>
+                                <div class="Folder__item js-fileItem" data-path="<?=$path['path']?>">
+                                    <div class="Folder__name"><?=$path['value']?></div>
+                                </div>
                             <? } ?>
                         </div>
                         <span class="Filter__label Filter__label--file">Список выбранных файлов:</span>
                         <div class="FileList js-fileItems"></div>
                     </div>
-                    <? } ?>
-                    <button class="js-testPreview">Тест preview</button>
-                    <button class="js-testHar">Тест har</button>
-                    <button class="js-testFile">Тест файл</button>
+
+                    <button class="ViewButton active js-viewToggle" data-tab-id="1" data-tab-name="Preview1">STATS</button>
+                    <button class="ViewButton js-viewToggle" data-tab-id="1" data-tab-name="DOM1">HAR</button>
+                    <button class="ViewButton ViewButton--second js-doubleView">DOUBLE VIEW</button>
                 </div>
                 <div class="Content">
-                    <? if (!empty($arResult['FILTER_DIR'])) { ?>
                     <div class="Content__tab js-ajaxTabContent" data-tab-id="1"></div>
-                    <? } ?>
                 </div>
-
-            </div><div class="Frame Frame--2">
+            </div><div class="Frame" style="display: none;">
                 <div class="FilterWrapper">
-                    <? if (!empty($arResult['FILTER_DIR'])) { ?>
                     <div class="Filter js-ajaxForm" data-tab-id="2">
-                        <span class="Filter__label">Добавить файл:<?=!empty($SUB_DIR) ? ' (каталог ' . $SUB_DIR . '/)' : ''?></span>
-                        <?=$arResult['FILTER_DIR']?>
-                        <span class="Filter__label">Список выбранных файлов:</span>
+                        <span class="Filter__label Filter__label--folder js-pathContent">Добавить файл:<span class="Folder__path js-path" data-path="/<?=$SUB_DIR?>"><?=!empty($SUB_DIR) ? $SUB_DIR : ''?></span></span>
+                        <div class="Filter__folder js-folderContent">
+                            <? foreach ($arResult['DIRS'] as $path) { ?>
+                                <div class="Folder__item js-folderItem" data-path="<?=$path['path']?>">
+                                    <div class="Folder__name"><?=$path['value']?></div>
+                                </div>
+                            <? } ?>
+                            <? foreach ($arResult['FILES'] as $path) { ?>
+                                <div class="Folder__item js-fileItem" data-path="<?=$path['path']?>">
+                                    <div class="Folder__name"><?=$path['value']?></div>
+                                </div>
+                            <? } ?>
+                        </div>
+                        <span class="Filter__label Filter__label--file">Список выбранных файлов:</span>
                         <div class="FileList js-fileItems"></div>
-
                     </div>
-                    <? } ?>
-                    <button class="js-testPreview">Тест preview</button>
-                    <button class="js-testHar">Тест har</button>
-                    <button class="js-testFile">Тест файл</button>
 
+                    <button class="ViewButton active js-viewToggle" data-tab-id="2" data-tab-name="Preview2">STATS</button>
+                    <button class="ViewButton js-viewToggle" data-tab-id="2" data-tab-name="DOM2">HAR</button>
+                    <button class="ViewButton ViewButton--second js-singleView">SINGLE VIEW</button>
                 </div>
                 <div class="Content">
-                    <? if (!empty($arResult['FILTER_DIR'])) { ?>
-                        <div class="Content__tab js-ajaxTabContent" data-tab-id="2"></div>
-                    <? } ?>
+                    <div class="Content__tab js-ajaxTabContent" data-tab-id="2"></div>
                 </div>
             </div>
         </div>

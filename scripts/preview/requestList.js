@@ -418,6 +418,10 @@ RequestList.setVisibleColumns = function(cols, avoidCookies)
     // Update cookie
     if (!avoidCookies)
         Cookies.setCookie("previewCols", cols);
+    var arr = cols.split(' ');
+    if (arr.length < 5) {
+
+    }
 };
 
 // Initialize UI. List of columns is specified on the content element (used by CSS).
@@ -1039,7 +1043,13 @@ RequestList.prototype = domplate(
             waitingBar.style.width = ( this.barWaitingWidth) + "%";
             receivingBar.style.width = ( this.barReceivingWidth) + "%";
 
-
+            /*blockingBar.style.width = (this.barBlockingWidth > 100 ? 100 - (this.barBlockingWidth - 100) : this.barBlockingWidth) + "%";
+            resolvingBar.style.width = (this.barResolvingWidth > 100 ? 100 - (this.barResolvingWidth - 100) : this.barResolvingWidth) + "%";
+            connectingBar.style.width = (this.barConnectingWidth > 100 ? 100 - (this.barConnectingWidth - 100) : this.barConnectingWidth) + "%";
+            sendingBar.style.width = (this.barSendingWidth > 100 ? 100 - (this.barSendingWidth - 100) : this.barSendingWidth) + "%";
+            waitingBar.style.width = (this.barWaitingWidth > 100 ?  100 - (this.barWaitingWidth - 100) : this.barWaitingWidth) + "%";
+            receivingBar.style.width = (this.barReceivingWidth > 100 ? 100 - (this.barReceivingWidth - 100) : this.barReceivingWidth) + "%";
+*/
             /*blockingBar.style.width = (this.barBlockingWidth > 100 ? this.barBlockingWidth - 100 : this.barBlockingWidth) + "%";
             resolvingBar.style.width = (this.barResolvingWidth > 100 ? this.barResolvingWidth - 100 : this.barResolvingWidth) + "%";
             connectingBar.style.width = (this.barConnectingWidth > 100 ? this.barConnectingWidth - 100 : this.barConnectingWidth) + "%";
