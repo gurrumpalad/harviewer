@@ -37,7 +37,6 @@ if (is_dir($DOCUMENT_ROOT . $SUB_DIR)) {
     }
 }
 $SUB_DIR = str_replace('/', '', $SUB_DIR);
-//сделать: добавление глобального таба с инпутами, выгрузка с использованием har.js
 header("Content-Type: text/html; charset=utf-8");
 ?>
 <!doctype html>
@@ -61,8 +60,8 @@ header("Content-Type: text/html; charset=utf-8");
                             </div>
                             <? } ?>
                             <? foreach ($arResult['FILES'] as $path) { ?>
-                                <div class="Folder__item js-fileItem" data-path="<?=$path['path']?>">
-                                    <div class="Folder__name"><?=$path['value']?></div>
+                                <div class="File__item js-fileItem" data-path="<?=$path['path']?>">
+                                    <div class="File__name"><?=$path['value']?></div>
                                 </div>
                             <? } ?>
                         </div>
@@ -88,8 +87,8 @@ header("Content-Type: text/html; charset=utf-8");
                                 </div>
                             <? } ?>
                             <? foreach ($arResult['FILES'] as $path) { ?>
-                                <div class="Folder__item js-fileItem" data-path="<?=$path['path']?>">
-                                    <div class="Folder__name"><?=$path['value']?></div>
+                                <div class="File__item js-fileItem" data-path="<?=$path['path']?>">
+                                    <div class="File__name"><?=$path['value']?></div>
                                 </div>
                             <? } ?>
                         </div>
@@ -113,6 +112,5 @@ header("Content-Type: text/html; charset=utf-8");
     <script src="scripts/downloadify/src/downloadify.js"></script>
     <script src="scripts/script.js"></script>
     <script data-main="scripts/harViewer" src="scripts/require.js"></script>
-    <!--@GOOGLE-ANALYTICS-INCLUDE@-->
 </body>
 </html>

@@ -420,7 +420,7 @@ RequestList.setVisibleColumns = function(cols, avoidCookies)
         Cookies.setCookie("previewCols", cols);
     var arr = cols.split(' ');
     if (arr.length < 5) {
-
+        //$('.netSizerRow .netCol').removeAttr('width');
     }
 };
 

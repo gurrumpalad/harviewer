@@ -14,10 +14,7 @@ define("tabs/previewTab", [
     "preview/pageList",
     "core/cookies",
     "preview/validationError",
-    "core/trace",
-    /*"downloadify/js/swfobject",
-    "downloadify/src/downloadify"*/
-
+    "core/trace"
 ],
 
 function(Domplate, TabView, Lib, Strings, Toolbar, Timeline, Stats, PageList, Cookies,

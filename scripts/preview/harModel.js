@@ -199,7 +199,6 @@ HarModel.prototype =
                     if (this.input.log.entries) {
                         for (var j = 0; j < this.input.log.entries.length; j++) {
                             if (this.input.log.entries[j].pageref === pageId) {
-                                Trace.log('remove entry may ' + this.input.log.entries[j].pageref);
                                 this.input.log.entries[j] = null;
                             }
                         }

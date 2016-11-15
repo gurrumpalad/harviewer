@@ -79,16 +79,16 @@ HarView.prototype = Lib.extend(new TabView(),
             this.appendTab(curTab);
         }
         // Global application properties.
-        this.version = content.getAttribute("version");
-        this.harSpecURL = "http://www.softwareishard.com/blog/har-12-spec/";
+        //this.version = content.getAttribute("version");
+        //this.harSpecURL = "http://www.softwareishard.com/blog/har-12-spec/";
 
         this.render(content);
         //this.selectTabByName("Home");
         this.selectTabByName("Preview" + this.iterator);
 
         // Auto load all HAR files specified in the URL.
-        var okCallback = Lib.bind(this.appendPreview, this);
-        var errorCallback = Lib.bind(this.onLoadError, this);
+        //var okCallback = Lib.bind(this.appendPreview, this);
+        //var errorCallback = Lib.bind(this.onLoadError, this);
 
         /*if (Loader.run(okCallback, errorCallback))
         {
