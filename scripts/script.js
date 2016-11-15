@@ -69,7 +69,7 @@ $(document).ready(function(){
                 var tabObj = $('.js-ajaxTabContent[data-tab-id="' + tabID + '"]').last().get(0).repObject;
                 if (tabObj) {
                     try {
-                        $.getJSON(path, function(input){
+                        $.getJSON(document.location.pathname.substr(0, (document.location.pathname.length - 1)) + path, function(input){
                             tabObj.appendPreview(input);
                             fileItems.append('<div class="FileItem js-fileItem" data-file-path="' + path + '">' + path + '<div class="FileItem__remove js-fileRemove">Удалить</div></div>');
                             form.find('.js-path:first').nextAll('.js-path').remove();
@@ -95,7 +95,7 @@ $(document).ready(function(){
                 var pages = tabObj.model.getPages();
                 if (pages) {
                     try {
-                        $.getJSON(filePath, function(input){
+                        $.getJSON(document.location.pathname.substr(0, (document.location.pathname.length - 1)) + filePath, function(input){
                             var obj = tabObj.removeHarFile(input);
                             if (obj) {
                                 tabObj.initialize($('.js-ajaxTabContent[data-tab-id="' + tabID + '"]').last().get(0), obj);

@@ -44,6 +44,7 @@ header("Content-Type: text/html; charset=utf-8");
 <head>
     <title>HTTP Archive Viewer - INT</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
     <link rel="stylesheet" href="css/harViewer.css" type="text/css">
 </head>
 <body class="js-ajaxListener">
