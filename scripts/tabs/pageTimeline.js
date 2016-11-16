@@ -367,24 +367,75 @@ Timeline.Desc = domplate(
         DIV({"class": "pageDescBox"},
             DIV({"class": "connector"}),
             DIV({"class": "desc"},
-                SPAN({"class": "summary"}, "$object|getSummary"),
+                SPAN({"class": "summary Page__load"}, "$object.page|getPageLoad"),
+                SPAN({"class": "summary Page__domLoad"}, "$object.page|getPageDomLoad"),
+                SPAN({"class": "summary Page__serverPing"}, "$object|getPageServerPing"),
+                SPAN({"class": "summary Page__totalTime"}, "$object|getPageTotalTime"),
+                SPAN({"class": "summary Page__countRequest"}, "$object|getPageCountRequest"),
                 SPAN({"class": "time"}, "$object.page|getTime"),
                 SPAN({"class": "title"}, "$object.page|getTitle"),
                 PRE({"class": "comment"}, "$object.page|getComment")
             )
         ),
-
-    getSummary: function(object)
+    getPageLoad: function(page)
     {
         var summary = "";
-        var onLoad = object.page.pageTimings.onLoad;
+        var onLoad = page.pageTimings.onLoad;
         if (onLoad > 0)
-            summary += Strings.pageLoad + ": " + Lib.formatTime(onLoad.toFixed(2)) + ", ";
+            summary += Strings.pageLoad + ": " + Lib.formatTime(onLoad.toFixed(2));
+        return summary;
+    },
 
+    getPageDomLoad: function(page)
+    {
+        var summary = "";
+        var onLoad = page.pageTimings.onContentLoad;
+        if (onLoad > 0)
+            summary += Strings.domLoad + ": " + Lib.formatTime(onLoad.toFixed(2));
+        return summary;
+    },
+
+    getPageCountRequest: function(object)
+    {
+        var summary = "";
         var requests = HarModel.getPageEntries(object.input, object.page);
         var count = requests.length;
         summary += count + " " + (count === 1 ? Strings.request : Strings.requests);
+        return summary;
+    },
 
+    getPageServerPing: function(object)
+    {
+        var summary = "";
+        var requests = HarModel.getPageEntries(object.input, object.page);
+        var docRequest = requests[0] ? requests[0] : null;
+        if (docRequest && docRequest.time) {
+            summary += Strings.serverTime + ": " + Lib.formatTime(docRequest.time.toFixed(2));
+        }
+        return summary;
+    },
+
+    getPageTotalTime: function(object)
+    {
+        var summary = "";
+        //Trace.log(object);
+        var requests = HarModel.getPageEntries(object.input, object.page);
+        var minTime = 0;
+        var maxTime = 0;
+        for (var i = 0; i < requests.length; i++) {
+            if (requests[i]) {
+                var startedDateTime = Lib.parseISO8601(requests[i].startedDateTime);
+                if (!minTime || startedDateTime < minTime) {
+                    minTime = startedDateTime;
+                }
+                var fileEndTime = startedDateTime + requests[i].time;
+                if (fileEndTime > maxTime) {
+                    maxTime = fileEndTime;
+                }
+            }
+        }
+        var totalTime = maxTime - minTime;
+        summary += Strings.finishTime + ": " + Lib.formatTime(totalTime.toFixed(2));
         return summary;
     },
 
@@ -411,7 +462,7 @@ Timeline.Desc = domplate(
             input: bar.input,
             page: bar.page
         };
-
+        //Trace.log(object);
         var element = this.tag.replace({object: object}, parentNode);
         var conn = Lib.$(element, "connector");
         conn.style.marginLeft = bar.parentNode.offsetLeft + "px";

@@ -156,7 +156,6 @@
 
 .Folder__path::after {
     content: ' /';
-
     text-decoration: none;
 }
 
@@ -190,7 +189,7 @@
     position: absolute;
     left: 5px;
     top: 3px;
-    width: 12px;
+    width: 16px;
     height: 16px;
     color: #80a6cd;
     fill: currentcolor;
@@ -203,7 +202,7 @@
     position: absolute;
     left: 5px;
     top: 3px;
-    width: 16px;
+    width: 12px;
     height: 16px;
     color: #80a6cd;
     content: "";
@@ -280,4 +279,35 @@
     position: absolute;
     right: 4px;
     top: 252px;
+}
+
+.pageDescBox .desc {
+    background: #ffffff;
+    border-color: #51a7e8;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.075) inset, 0 0 5px rgba(81, 167, 232, 0.5);
+    padding: 5px;
+}
+
+.pageDescBox .desc span {
+    display: block;
+}
+
+.pageDescBox .desc span.time,
+.pageDescBox .desc span.title {
+    padding-left: 0;
+}
+.Page__load {
+    color: red;
+}
+
+.Page__domLoad {
+    color: blue;
+}
+
+.Page__countRequest {
+    color: green;
+}
+
+.Page__serverPing {
+    color: #4078c0;
 }

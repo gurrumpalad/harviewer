@@ -11,13 +11,14 @@ define("tabs/previewTab", [
     "domplate/toolbar",
     "tabs/pageTimeline",
     "tabs/harStats",
+    "tabs/harSummary",
     "preview/pageList",
     "core/cookies",
     "preview/validationError",
     "core/trace"
 ],
 
-function(Domplate, TabView, Lib, Strings, Toolbar, Timeline, Stats, PageList, Cookies,
+function(Domplate, TabView, Lib, Strings, Toolbar, Timeline, Stats, Summary, PageList, Cookies,
     ValidationError, Trace) {
 
 var DIV = Domplate.DIV;
@@ -32,6 +33,7 @@ function PreviewTab(model)
     this.toolbar = new Toolbar();
     this.timeline = new Timeline();
     this.stats = new Stats(model, this.timeline);
+    this.summary = new Summary(model, this.timeline, this.stats);
 
     // Initialize toolbar.
     this.toolbar.addButtons(this.getToolbarButtons());
@@ -53,6 +55,7 @@ PreviewTab.prototype = Lib.extend(TabView.Tab.prototype,
             DIV({"class": "previewToolbar"}),
             DIV({"class": "previewTimeline"}),
             DIV({"class": "previewStats"}),
+            DIV({"class": "previewSummary"}),
             DIV({"class": "previewList"})
         ),
 
@@ -70,6 +73,7 @@ PreviewTab.prototype = Lib.extend(TabView.Tab.prototype,
         this.toolbar.render(Lib.$(body, "previewToolbar"));
         this.stats.render(Lib.$(body, "previewStats"));
         this.timeline.render(Lib.$(body, "previewTimeline"));
+        this.summary.render(Lib.$(body, "previewSummary"));
 
         // Show timeline & stats by default if the cookie says so (no animation)
         // But there should be an input.
@@ -79,6 +83,9 @@ PreviewTab.prototype = Lib.extend(TabView.Tab.prototype,
 
         if (input && Cookies.getCookie("stats") === "true")
             this.onStats(false);
+
+        if (input && Cookies.getCookie("summary") === "true")
+            this.onSummary(false);
 
         this.updateDownloadifyButton();
     },
@@ -124,6 +131,12 @@ PreviewTab.prototype = Lib.extend(TabView.Tab.prototype,
                 label: Strings.showStatsButton,
                 tooltiptext: Strings.showStatsTooltip,
                 command: Lib.bindFixed(this.onStats, this, true)
+            },
+            {
+                id: "showSummary",
+                label: Strings.showSummaryButton,
+                tooltiptext: Strings.showSummaryTooltip,
+                command: Lib.bindFixed(this.onSummary, this, true)
             },
             {
                 id: "clear",
@@ -182,6 +195,25 @@ PreviewTab.prototype = Lib.extend(TabView.Tab.prototype,
         this.updateDownloadifyButton();
 
         Cookies.setCookie("stats", visible);
+    },
+
+    onSummary: function(animation)
+    {
+        // Update showStats button label.
+        var button = this.toolbar.getButton("showSummary");
+        if (!button)
+            return;
+        var currentTab = $('.js-ajaxTabContent[data-tab-id="' + this.id.substr(7) + '"]').find('.previewSummary');
+        this.summary.toggle(animation, currentTab);
+
+        var visible = this.summary.isVisible();
+        button.label = Strings[visible ? "hideSummaryButton" : "showSummaryButton"];
+
+        // Re-render toolbar to update label.
+        this.toolbar.render();
+        this.updateDownloadifyButton();
+
+        Cookies.setCookie("summary", visible);
     },
 
     onClear: function()
