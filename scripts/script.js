@@ -77,7 +77,7 @@ $(document).ready(function(){
                 if (tabObj) {
                     try {
                         $.getJSON(subdomen + path, function(input){
-                            tabObj.appendPreview(input);
+                            tabObj.appendPreview(input, path);
                             fileItems.append('<div class="FileItem js-fileItem" data-file-path="' + path + '">' + path + '<div class="FileItem__remove js-fileRemove">Удалить</div></div>');
                             form.find('.js-path:first').nextAll('.js-path').remove();
                             form.find('.js-path:first').get(0).click();
@@ -114,7 +114,7 @@ $(document).ready(function(){
                 if (pages) {
                     try {
                         $.getJSON(subdomen + filePath, function(input){
-                            var obj = tabObj.removeHarFile(input);
+                            var obj = tabObj.removeHarFile(input, filePath);
                             if (obj) {
                                 tabObj.initialize($('.js-ajaxTabContent[data-tab-id="' + tabID + '"]').last().get(0), obj);
                             } else {
@@ -165,6 +165,5 @@ $(document).ready(function(){
             }
         });
         //~табы - HAR и STATS
-
     }
 });

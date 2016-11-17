@@ -32,6 +32,7 @@
     width: 49.99%;
     display: inline-block;
     border-right: 1px solid #e5e5e5;
+    vertical-align: top;
 }
 .FilterWrapper {
     width: 100%;
@@ -39,13 +40,11 @@
     position: relative;
     display: block;
     height: 290px;
-    /*background-color: #f5f5f5;*/
 }
 
 .Filter {
     display: block;
     height: 252px;
-    /*overflow: auto;*/
 }
 
 .Filter__label {
@@ -163,7 +162,8 @@
     text-decoration: underline;
 }
 
-.Folder__item, .File__item {
+.Folder__item,
+.File__item {
     line-height: 20px;
     color: #4078c0;
     cursor: pointer;
@@ -174,7 +174,9 @@
     border: 1px solid transparent;
     overflow: hidden;
 }
-.Folder__item:hover, .File__item:hover {
+.Folder__item:hover,
+.File__item:hover,
+.SummaryEntry:hover {
     border-color: #51a7e8;
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.075) inset, 0 0 5px rgba(81, 167, 232, 0.5);
     outline: medium none;
@@ -310,4 +312,230 @@
 
 .Page__serverPing {
     color: #4078c0;
+}
+/*Summary Tab*/
+.pageSummaryBody {
+    display: none;
+    width: 100%;
+    position: relative;
+}
+.pageSummaryBody.opened {
+    display: block;
+}
+.summaryPage--0.pageSummaryBody.opened {
+    display: none;
+}
+.previewSummary,
+.pageSummaryHeader,
+.SummaryResume {
+    width: 100%;
+    position: relative;
+    display: block;
+}
+
+.pageSummaryHeader {
+    background-color: #f2f9fc;
+    border: 1px solid #c9e6f2;
+    border-radius: 3px 3px 0 0;
+    color: #68777d;
+    position: relative;
+}
+
+
+.summaryPage--2 .Summary__header,
+.summaryPage--2 .Summary__entry,
+.summaryPage--2 .Resume__entry {
+    width: 49.99%;
+    display: inline-block;
+}
+
+.Summary__header + .Summary__header,
+.Summary__entry + .Summary__entry,
+.Resume__entry + .Resume__entry {
+    border-left: 1px solid #ddd;
+}
+
+.summaryPage--3 .Summary__header,
+.summaryPage--3 .Summary__entry,
+.summaryPage--3 .Resume__entry {
+    width: 33.33%;
+    display: inline-block;
+}
+
+.summaryPage--4 .Summary__header,
+.summaryPage--4 .Summary__entry,
+.summaryPage--4 .Resume__entry {
+    width: 24.99%;
+    display: inline-block;
+}
+
+.summaryPage--5 .Summary__header,
+.summaryPage--5 .Summary__entry,
+.summaryPage--5 .Resume__entry {
+    width: 19.99%;
+    display: inline-block;
+}
+
+.summaryPage--6 .Summary__header,
+.summaryPage--6 .Summary__entry,
+.summaryPage--6 .Resume__entry {
+    width: 16.65%;
+    display: inline-block;
+}
+
+.Summary__header {
+    display: block;
+    width: 100%;
+    font-size: 13px;
+    line-height: 20px;
+    padding: 10px;
+    overflow: hidden;
+}
+.SummaryEntry {
+    border: 1px solid #ddd;
+    border-top: 1px solid transparent;
+    color: #333;
+    display: block;
+    font-size: 14px;
+    overflow: hidden;
+    width: 100%;
+    position: relative;
+    height: 60px;
+}
+
+.Summary__entry {
+    width: 100%;
+    overflow: hidden;
+    display: inline-block;
+    height: 60px;
+    line-height: 16px;
+    padding: 5px;
+}
+
+.SummaryResume {
+    background-color: #f2f9fc;
+    border: 1px solid #c9e6f2;
+    border-bottom: none;
+    color: #68777d;
+    margin-bottom: -5px;
+    position: relative;
+    font-size: 13px;
+}
+.SummaryResume + .SummaryResume {
+    border-top: none;
+}
+.pageSummaryFooter {
+    background-color: #f2f9fc;
+    border: 1px solid #c9e6f2;
+    border-top: none;
+    border-radius: 0 0 3px 3px;
+    color: #68777d;
+    position: relative;
+    margin-bottom: 15px;
+}
+.Resume__entry {
+    width: 100%;
+    overflow: auto;
+    display: inline-block;
+    font-size: 13px;
+    line-height: 20px;
+    padding: 10px;
+}
+.resumeBlock {
+    display: block;
+    font-weight: bold;
+}
+.previewList {
+    display: block;
+    width: 100%;
+    position: relative;
+}
+
+.Added {
+    background: #ecfdf0 none repeat scroll 0 0;
+}
+
+.Deleted {
+    background: #fbe9eb none repeat scroll 0 0;
+    position: relative;
+}
+.Deleted::before {
+    content: "-";
+    display: block;
+    left: 15px;
+    position: absolute;
+    text-align: center;
+    top: 18px;
+    width: 30px;
+}
+
+    /*Summary Tab*/
+.harViewBodies,
+.tabViewBody,
+.tabViewCol,
+.tabViewRow,
+.harView,
+.harView > tbody{
+    width: 100%;
+    display: block;
+}
+
+.Resume__entry span {
+    font-size: 12px;
+}
+
+.entry__Title {
+    display: block;
+    text-decoration: none;
+    color: black;
+}
+.entry__Title:hover {
+    text-decoration: underline;
+}
+.entry__Time {
+    display: block;
+    font-weight: bold;
+}
+.entry__Size {
+    display: block;
+    font-weight: bold;
+}
+.header__Title {
+    font-size: 14px;
+    display: block;
+    font-weight: bold;
+    color: #3084bb;
+}
+.header__Time {
+    display: block;
+    font-weight: bold;
+}
+
+.Page__docSize {
+    color: #4a2;
+}
+
+.Page__totalSize,
+.Page__docCount {
+    color: #491;
+}
+
+.Page__totalSize,
+.Page__styleSize,
+.Page__scriptSize {
+    margin-bottom: 10px;
+}
+.Page__styleCount,
+.Page__styleSize {
+    color: #3084bb;
+}
+
+.Page__scriptCount,
+.Page__scriptSize {
+    color: #e24329;
+}
+
+.Page__imgCount,
+.Page__imgSize {
+    color: #619dd5;
 }

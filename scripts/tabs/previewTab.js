@@ -33,7 +33,7 @@ function PreviewTab(model)
     this.toolbar = new Toolbar();
     this.timeline = new Timeline();
     this.stats = new Stats(model, this.timeline);
-    this.summary = new Summary(model, this.timeline, this.stats);
+    this.summary = new Summary(model);
 
     // Initialize toolbar.
     this.toolbar.addButtons(this.getToolbarButtons());
@@ -199,12 +199,13 @@ PreviewTab.prototype = Lib.extend(TabView.Tab.prototype,
 
     onSummary: function(animation)
     {
+
         // Update showStats button label.
         var button = this.toolbar.getButton("showSummary");
         if (!button)
             return;
-        var currentTab = $('.js-ajaxTabContent[data-tab-id="' + this.id.substr(7) + '"]').find('.previewSummary');
-        this.summary.toggle(animation, currentTab);
+
+        this.summary.toggle(animation);
 
         var visible = this.summary.isVisible();
         button.label = Strings[visible ? "hideSummaryButton" : "showSummaryButton"];
@@ -218,6 +219,7 @@ PreviewTab.prototype = Lib.extend(TabView.Tab.prototype,
 
     onClear: function()
     {
+        Cookies.setCookie("hars" + this.id.substr(7), '');
         var href = document.location.href;
         var index = href.indexOf("?");
         document.location = href.substr(0, index);
@@ -245,6 +247,7 @@ PreviewTab.prototype = Lib.extend(TabView.Tab.prototype,
 
         // Append new pages into the timeline.
         this.timeline.append(input);
+        this.summary.append(input);
 
         // Register context menu listener (provids additional commands for the context menu).
         pageList.addListener(this);

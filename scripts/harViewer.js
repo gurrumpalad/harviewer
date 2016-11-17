@@ -12,11 +12,12 @@ define("harViewer", [
     "i18n!nls/harViewer",
     "preview/requestList",
     "core/lib",
-    "core/trace"
+    "core/trace",
+    "core/cookies"
 ],
 
 function(TabView,  PreviewTab, DomTab, HarModel,
-    Loader, Strings, RequestList, Lib, Trace) {
+    Loader, Strings, RequestList, Lib, Trace, Cookies) {
 
 var contents = document.getElementsByClassName("js-ajaxTabContent");//.item(document.getElementsByClassName("js-ajaxTabContent").length - 1);
 
@@ -79,29 +80,17 @@ HarView.prototype = Lib.extend(new TabView(),
             this.appendTab(curTab);
         }
         // Global application properties.
-        //this.version = content.getAttribute("version");
-        //this.harSpecURL = "http://www.softwareishard.com/blog/har-12-spec/";
 
         this.render(content);
-        //this.selectTabByName("Home");
+
         this.selectTabByName("Preview" + this.iterator);
 
-        // Auto load all HAR files specified in the URL.
-        //var okCallback = Lib.bind(this.appendPreview, this);
-        //var errorCallback = Lib.bind(this.onLoadError, this);
-
-        /*if (Loader.run(okCallback, errorCallback))
-        {
-            var homeTab = this.getTab("Home");
-            if (homeTab)
-                homeTab.loadInProgress(true);
-        }*/
         if (inputHar) {
             this.appendPreview(inputHar);
         }
     },
 
-    appendPreview: function(jsonString)
+    appendPreview: function(jsonString, path)
     {
         //var homeTab = this.getTab("Home");
         var previewTab = this.getTab("Preview" + this.iterator);
@@ -136,6 +125,16 @@ HarView.prototype = Lib.extend(new TabView(),
             // is switched off, otherwise HarModel.parse() throws an exception.
             if (domTab)
                 domTab.append(input);
+
+            if (path) {
+                var strCookie = Cookies.getCookie("hars" + this.iterator);
+                if (strCookie && strCookie.length > 0 && strCookie.indexOf(path) < 0) {
+                    strCookie += "#" + path;
+                } else {
+                    strCookie = path;
+                }
+                Cookies.setCookie("hars" + this.iterator, strCookie);
+            }
         }
         catch (err)
         {
@@ -158,16 +157,33 @@ HarView.prototype = Lib.extend(new TabView(),
         Lib.fireEvent(content, "onViewerHARLoaded");
     },
 
-    removeHarFile: function(jsonString)
+    removeHarFile: function(jsonString, path)
     {
         try
         {
+
             var validate = false;
             var input = HarModel.parse(jsonString, validate);
             input = this.model.removeHar(input);
             this.model.input = input;
             input = this.model.toJSON(input);
             this.model.input = null;
+            if (path) {
+                var strCookie = Cookies.getCookie("hars" + this.iterator);
+                if (strCookie && strCookie.length > 0) {
+                    var arCookie = strCookie.split('#');
+                    var arNewCookie = [];
+                    strCookie = '';
+                    for (var i = 0; i < arCookie.length; i++) {
+                        if (arCookie[i] && arCookie[i] != path) {
+                            arNewCookie.push(arCookie[i]);
+                        }
+                    }
+                    strCookie = arNewCookie.join('#');
+                }
+                Cookies.setCookie("hars" + this.iterator, strCookie);
+            }
+
             return input;
         }
         catch (err)
@@ -249,6 +265,22 @@ if (contents.length > 0) {
         Lib.fireEvent(content, "onViewerPreInit");
         harView.initialize(content);
         Lib.fireEvent(content, "onViewerInit");
+        //открытие файлов из прошлой сессии
+        var tabID = Number(i + 1);
+        var harFiles = Cookies.getCookie("hars" + tabID);
+        if (harFiles && harFiles.length > 0) {
+            harFiles = harFiles.split('#');
+            for (var j = 0; j < harFiles.length; j++) {
+                if (harFiles[j]) {
+                    var form = $('.js-ajaxForm[data-tab-id="' + tabID + '"]');
+                    var path = harFiles[j];
+                    var fileItems = form.find('.js-folderContent');
+                    var fileElem = '<div class="File__item js-fileItem" data-path="' + path + '"><div class="File__name">' + path + '</div></div>';
+                    fileItems.append(fileElem);
+                    $(fileItems).find('.js-fileItem:last').get(0).click();
+                }
+            }
+        }
         Trace.log("HarViewer" + i + "; initialized OK");
     }
 }

@@ -418,7 +418,6 @@ Timeline.Desc = domplate(
     getPageTotalTime: function(object)
     {
         var summary = "";
-        //Trace.log(object);
         var requests = HarModel.getPageEntries(object.input, object.page);
         var minTime = 0;
         var maxTime = 0;
@@ -462,7 +461,6 @@ Timeline.Desc = domplate(
             input: bar.input,
             page: bar.page
         };
-        //Trace.log(object);
         var element = this.tag.replace({object: object}, parentNode);
         var conn = Lib.$(element, "connector");
         conn.style.marginLeft = bar.parentNode.offsetLeft + "px";
