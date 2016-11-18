@@ -3,20 +3,20 @@
 define(
 {
     "root": {
-        "previewTabLabel": "Preview",
-        "showTimelineButton": "Show Page Timeline",
-        "hideTimelineButton": "Hide Page Timeline",
-        "showTimelineTooltip": "Show/hide statistic preview for selected pages in the timeline.",
-        "showStatsButton": "Show Statistics",
-        "hideStatsButton": "Hide Statistics",
-        "showSummaryButton": "Show Summary",
-        "hideSummaryButton": "Hide Summary",
-        "showSummaryTooltip": "Show/hide page summary.",
-        "showStatsTooltip": "Show/hide page timeline.",
-        "clearButton": "Clear",
-        "clearTooltip": "Remove all HAR logs from the viewer",
-        "downloadTooltip": "Download all current data in one HAR file.",
-        "downloadError": "Failed to save HAR data",
-        "menuShowHARSource": "Show HAR Source"
+        "previewTabLabel": "Просмотр",
+        "showTimelineButton": "Показать шкалу",
+        "hideTimelineButton": "Скрыть шкалу",
+        "showTimelineTooltip": "Показать/скрыть просмотр статистики для выбранных страниц в виде временной шкалы.",
+        "showStatsButton": "Показать диаграммы",
+        "hideStatsButton": "Скрыть диаграммы",
+        "showSummaryButton": "Показать суммарную информацию",
+        "hideSummaryButton": "Скрыть суммарную информацию",
+        "showSummaryTooltip": "Показать/скрыть суммарную информацию по страницам со сравнением.",
+        "showStatsTooltip": "Показать/скрыть диаграммы.",
+        "clearButton": "Очистить",
+        "clearTooltip": "Удалить все HAR файлы из данного отображения",
+        "downloadTooltip": "Скачать все данные в виде одного HAR файла.",
+        "downloadError": "Невозможно сохранить HAR данные",
+        "menuShowHARSource": "Показать HAR структуру"
     }
 });

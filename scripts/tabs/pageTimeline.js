@@ -400,7 +400,7 @@ Timeline.Desc = domplate(
         var summary = "";
         var requests = HarModel.getPageEntries(object.input, object.page);
         var count = requests.length;
-        summary += count + " " + (count === 1 ? Strings.request : Strings.requests);
+        summary += count + " " + (count === 1 ? Strings.request : (((count % 10) > 0 && (count % 10) < 5) ? Strings.requests2 : Strings.requests));
         return summary;
     },
 

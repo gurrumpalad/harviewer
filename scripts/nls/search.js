@@ -3,7 +3,7 @@
 define(
 {
     "root": {
-        "search": "Search",
-        "caseSensitive": "Case Sensitive"
+        "search": "Поиск",
+        "caseSensitive": "С учетом регистра"
     }
 });

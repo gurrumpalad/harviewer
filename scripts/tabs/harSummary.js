@@ -173,6 +173,7 @@ Summary.prototype = domplate(
             var modelEntries = this.model.getAllEntries();
             var allEntries = {};
             var enToPages = {};
+            var pageToEntry = {};
             for (var j = 0; j < modelEntries.length; j++) {
                 if (
                     modelEntries[j]
@@ -181,14 +182,40 @@ Summary.prototype = domplate(
                     && modelEntries[j].request.url
                     && modelEntries[j].request.url.length > 0
                 ) {
+
+                    var localDomen = Url.getPrettyDomain(modelEntries[j].request.url);
+
+                    var localUrl = modelEntries[j].request.url;
+                    if (localDomen.length > 0) {
+                        var curRequest = localUrl.substr((localUrl.indexOf(localDomen) + localDomen.length));
+                        if (curRequest.length > 0) {
+                            if (/([^0-9]+)\.[0-9]+\.(css|js)$/.test(curRequest)) {
+                                curRequest = curRequest.replace(/([^0-9]+)\.[0-9]+\.(css|js)$/, "$1.$2");
+                            }
+                            localUrl = localDomen + curRequest;
+                        }
+                    }
+
+                    //страницы к запросам
                     if (enToPages[modelEntries[j].pageref] === undefined) {
                         enToPages[modelEntries[j].pageref] = {};
                     }
-                    if (enToPages[modelEntries[j].pageref][modelEntries[j].request.url] === undefined) {
-                        enToPages[modelEntries[j].pageref][modelEntries[j].request.url] = modelEntries[j];
+                    if (enToPages[modelEntries[j].pageref][localUrl] === undefined) {
+                        enToPages[modelEntries[j].pageref][localUrl] = modelEntries[j];
                     }
-                    if (allEntries[modelEntries[j].request.url] === undefined) {
-                        allEntries[modelEntries[j].request.url] = modelEntries[j];
+
+                    //запросы к страницам
+                    if (pageToEntry[localUrl] === undefined) {
+                        pageToEntry[localUrl] = {};
+                    }
+                    if (pageToEntry[localUrl][modelEntries[j].pageref] === undefined) {
+                        pageToEntry[localUrl][modelEntries[j].pageref] = modelEntries[j];
+                    }
+
+
+
+                    if (allEntries[localUrl] === undefined) {
+                        allEntries[localUrl] = modelEntries[j];
                     }
                 }
             }
@@ -237,37 +264,37 @@ Summary.prototype = domplate(
                     curSizing.push(
                         {
                             class:"Page__docSize",
-                            content: "Document Size: " + Lib.formatSize(pageSizing.document_size)
+                            content: "Размер документа: " + Lib.formatSize(pageSizing.document_size)
                         }
                     );
 
                     curSizing.push(
                         {
                             class:"Page__docCount",
-                            content: "Count Total: " + Number(pageSizing.total_entries_own + pageSizing.total_entries_third)
-                                + ", own " + pageSizing.total_entries_own + ", third " + pageSizing.total_entries_third
+                            content: "Общее количество: " + Number(pageSizing.total_entries_own + pageSizing.total_entries_third)
+                                + ", своих " + pageSizing.total_entries_own + ", чужих " + pageSizing.total_entries_third
                         }
                     );
                     curSizing.push(
                         {
                             class:"Page__totalSize",
-                            content: "Size: " + Lib.formatSize(Number(pageSizing.total_download_own + pageSizing.total_download_third))
-                            + ", own " + Lib.formatSize(pageSizing.total_download_own) + ", third " + Lib.formatSize(pageSizing.total_download_third)
+                            content: "Размер: " + Lib.formatSize(Number(pageSizing.total_download_own + pageSizing.total_download_third))
+                            + ", своих " + Lib.formatSize(pageSizing.total_download_own) + ", чужих " + Lib.formatSize(pageSizing.total_download_third)
                         }
                     );
 
                     curSizing.push(
                         {
                             class:"Page__styleCount",
-                            content: "Style Count: " + Number(pageSizing.style_count_own + pageSizing.style_count_third)
-                            + ", own " + pageSizing.style_count_own + ", third " + pageSizing.style_count_third
+                            content: "Количество стилей: " + Number(pageSizing.style_count_own + pageSizing.style_count_third)
+                            + ", своих " + pageSizing.style_count_own + ", чужих " + pageSizing.style_count_third
                         }
                     );
                     curSizing.push(
                         {
                             class:"Page__styleSize",
-                            content: "Style Size: " + Lib.formatSize(Number(pageSizing.style_size_own + pageSizing.style_size_third))
-                            + ", own " + Lib.formatSize(pageSizing.style_size_own) + ", third " + Lib.formatSize(pageSizing.style_size_third)
+                            content: "Размер стилей: " + Lib.formatSize(Number(pageSizing.style_size_own + pageSizing.style_size_third))
+                            + ", своих " + Lib.formatSize(pageSizing.style_size_own) + ", чужих " + Lib.formatSize(pageSizing.style_size_third)
                         }
                     );
 
@@ -275,15 +302,15 @@ Summary.prototype = domplate(
                     curSizing.push(
                         {
                             class:"Page__scriptCount",
-                            content: "Script Count: " + Number(pageSizing.script_count_own + pageSizing.script_count_third)
-                            + ", own " + pageSizing.script_count_own + ", third " + pageSizing.script_count_third
+                            content: "Количество скриптов: " + Number(pageSizing.script_count_own + pageSizing.script_count_third)
+                            + ", своих " + pageSizing.script_count_own + ", чужих " + pageSizing.script_count_third
                         }
                     );
                     curSizing.push(
                         {
                             class:"Page__scriptSize",
-                            content: "Script Size: " + Lib.formatSize(Number(pageSizing.script_size_own + pageSizing.script_size_third))
-                            + ", own " + Lib.formatSize(pageSizing.script_size_own) + ", third " + Lib.formatSize(pageSizing.script_size_third)
+                            content: "Размер скриптов: " + Lib.formatSize(Number(pageSizing.script_size_own + pageSizing.script_size_third))
+                            + ", своих " + Lib.formatSize(pageSizing.script_size_own) + ", чужих " + Lib.formatSize(pageSizing.script_size_third)
                         }
                     );
 
@@ -291,15 +318,15 @@ Summary.prototype = domplate(
                     curSizing.push(
                         {
                             class:"Page__imgCount",
-                            content: "Images Count: " + Number(pageSizing.count_img_own + pageSizing.count_img_third)
-                            + ", own " + pageSizing.count_img_own + ", third " + pageSizing.count_img_third
+                            content: "Количество изображений: " + Number(pageSizing.count_img_own + pageSizing.count_img_third)
+                            + ", своих " + pageSizing.count_img_own + ", чужих " + pageSizing.count_img_third
                         }
                     );
                     curSizing.push(
                         {
                             class:"Page__imgSize",
-                            content: "Images Size: " + Lib.formatSize(Number(pageSizing.size_img_own + pageSizing.size_img_third))
-                            + ", own " + Lib.formatSize(pageSizing.size_img_own) + ", third " + Lib.formatSize(pageSizing.size_img_third)
+                            content: "Размер изображений: " + Lib.formatSize(Number(pageSizing.size_img_own + pageSizing.size_img_third))
+                            + ", своих " + Lib.formatSize(pageSizing.size_img_own) + ", чужих " + Lib.formatSize(pageSizing.size_img_third)
                         }
                     );
 
@@ -334,28 +361,44 @@ Summary.prototype = domplate(
             //добавляем содержимое
 
             var entry = null;
+            var tempEntries = {};
+            var arHelpEntries = [];
+            var requests = [];
             for (entry in allEntries) {
                 var curRowEntry = [];
+                var curRowWeight = modelEntries.length;
                 for (var i = 0; i < pages.length; i++) {
                     if (pages[i] && pages[i].id) {
+                        var localRowWeight = 0;//Number(i + 1);
                         var curEntryContent = {time: '', title: '', size: '', href: ''};
                         var curEntryClass = "Deleted";
                         if (enToPages[pages[i].id] && enToPages[pages[i].id][entry]) {
                             //заголовок
                             var localEntry = enToPages[pages[i].id][entry];
-                            curEntryContent.href = entry;
-                            var curEntry = entry;
+                            var requests = HarModel.getPageEntries(this.model.input, pages[i]);
+                            for (var loc = 0; loc < requests.length; loc++) {
+                                if (
+                                    requests[loc]
+                                    && requests[loc].request.url
+                                    && requests[loc].request.url == localEntry.request.url
+                                ) {
+                                    localRowWeight = Number(loc + 1);
+                                    break;
+                                }
+                            }
+                            curEntryContent.href = localEntry.request.url;
+                            var curEntry = localEntry.request.url;
                             var curDomen = '';
                             if (pages[i].title) {
                                 curDomen = Url.getPrettyDomain(pages[i].title);
                                 if (curDomen.length > 0 && curEntry.indexOf(curDomen) >= 0) {
                                     curEntry = curEntry.substr((curEntry.indexOf(curDomen) + curDomen.length));
                                     if (curEntry.length <= 0 || curEntry == '/') {
-                                        curEntry = entry;
+                                        curEntry = pages[i].title;
                                     }
                                 }
                             }
-                            curEntryContent.title = curEntry;
+                            curEntryContent.title = Number(localRowWeight)  + ': ' + curEntry;
                             curEntryClass = "Added";
                             //время
                             curEntryContent.time = '';
@@ -366,10 +409,23 @@ Summary.prototype = domplate(
                             var bodySize = localEntry.response.bodySize;
                             var size = (bodySize && bodySize !== -1) ? bodySize : localEntry.response.content.size;
                             curEntryContent.size = Strings.sizeContent + ": " + Lib.formatSize(size);
-
                         }
-                        curRowEntry.push({class: curEntryClass, content: curEntryContent});
+
+                        curRowEntry.push({class: curEntryClass, content: curEntryContent, weight: localRowWeight});
+                        /*if (curRowEntry['key'] === undefined) {
+                            curRowEntry['key'] = '' + localRowWeight;
+                        } else {
+                            curRowEntry['key'] += '' + localRowWeight;
+                        }*/
+                        curRowWeight += localRowWeight;
+                        /*if (curRowWeight > localRowWeight) {
+                            curRowWeight = localRowWeight;
+                        }*/
                     }
+                }
+
+                if (curRowWeight > 0) {
+                    curRowWeight = Math.ceil(curRowWeight / pages.length);
                 }
                 //убираем класс у одинаковых элементов
                 var entryClass = 'Added';
@@ -386,8 +442,46 @@ Summary.prototype = domplate(
                         }
                     }
                 }
+                //tempEntries[curRowEntry['key']] = curRowEntry;
 
-                obj['entries'].push(curRowEntry);
+                /*for (var i = 0; i < pages.length; i++) {
+                    if (
+                        pages[i]
+                        && curRowEntry[i]
+                        && curRowEntry[i].weight > 0
+                    ) {
+                        if (arHelpEntries[i] === undefined) {
+                            arHelpEntries[i] = [];
+                        }
+                        if (arHelpEntries[i][curRowEntry[i].weight] === undefined) {
+                            arHelpEntries[i][curRowEntry[i].weight] = curRowEntry;
+                        }
+                    }
+                }
+*/
+
+                //curRowWeight = curRowWeight * curRowWeight;
+                if (tempEntries[curRowWeight]) {
+                    while (tempEntries[(++curRowWeight)]) {};
+                }
+                tempEntries[curRowWeight] = curRowEntry;
+            }
+            //Trace.log(tempEntries);
+
+            /*for (var i = 0; i < modelEntries.length; i++) {
+                for (var j = 0; j < pages.length; j++) {
+                    if (arHelpEntries[j] && arHelpEntries[j][i] && arHelpEntries[j][i]['key']) {
+                        var curKey = arHelpEntries[j][i]['key'];
+                        var tempAr = [];
+                        tempAr.push(arHelpEntries[j][i]);
+
+                    }
+                }
+            }*/
+            for (var key = 0; key < tempEntries.length; key++) {
+                if (tempEntries[key]) {
+                    obj['entries'].push(tempEntries[key]);
+                }
             }
         }
         return obj;

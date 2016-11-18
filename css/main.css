@@ -539,3 +539,7 @@
 .Page__imgSize {
     color: #619dd5;
 }
+
+.netPageTimingBar {
+    box-sizing: content-box;
+}

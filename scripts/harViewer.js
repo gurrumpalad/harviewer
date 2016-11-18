@@ -275,7 +275,7 @@ if (contents.length > 0) {
                     var form = $('.js-ajaxForm[data-tab-id="' + tabID + '"]');
                     var path = harFiles[j];
                     var fileItems = form.find('.js-folderContent');
-                    var fileElem = '<div class="File__item js-fileItem" data-path="' + path + '"><div class="File__name">' + path + '</div></div>';
+                    var fileElem = '<div class="File__item js-fileItem" data-remove="Y" data-path="' + path + '"><div class="File__name">' + path + '</div></div>';
                     fileItems.append(fileElem);
                     $(fileItems).find('.js-fileItem:last').get(0).click();
                 }

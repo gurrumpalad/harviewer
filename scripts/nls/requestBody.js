@@ -3,26 +3,26 @@
 define(
 {
     "root": {
-        "RequestHeaders": "Request Headers",
-        "ResponseHeaders": "Response Headers",
-        "RequestCookies": "Request Cookies",
-        "ResponseCookies": "Response Cookies",
-        "URLParameters": "Params",
-        "Headers": "Headers",
-        "Post": "Post",
-        "Put": "Put",
-        "Get": "Get",
+        "RequestHeaders": "Заголовки запроса",
+        "ResponseHeaders": "Заголовки ответа",
+        "RequestCookies": "Cookies запроса",
+        "ResponseCookies": "Cookies ответа",
+        "URLParameters": "Параметры",
+        "Headers": "Заголовки",
+        "Post": "POST",
+        "Put": "PUT",
+        "Get": "GET",
         "Cookies": "Cookies",
-        "Response": "Response",
-        "Highlighted": "Highlighted",
-        "Image": "Img (from HAR)",
-        "ImageTitle": "Uses image payload data from the HAR",
-        "ExternalImage": "Img (from URL)",
-        "ExternalImageTitle": "Creates an IMG tag whose src is the request URL",
-        "Cache": "Cache",
+        "Response": "Ответ",
+        "Highlighted": "Подсвечено",
+        "Image": "Изображение (из HAR)",
+        "ImageTitle": "Используется для отображения данных из HAR",
+        "ExternalImage": "Изображение (из URL)",
+        "ExternalImageTitle": "Создается изображение из URL",
+        "Cache": "Кэш",
         "HTML": "HTML",
         "JSON": "JSON",
         "XML": "XML",
-        "DataURL": "Data URL"
+        "DataURL": "URL данных"
     }
 });

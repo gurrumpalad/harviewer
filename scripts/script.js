@@ -53,8 +53,11 @@ $(document).ready(function(){
         //проводник
         $(ajaxListener).on('click', '.js-ajaxForm .js-folderContent .js-folderItem', function(){
             if ($(this).attr('data-path') && $(this).attr('data-path').length > 0) {
-                var headerElem = '<span class="Folder__path js-path" data-path="' + $(this).attr('data-path') + '">' + $(this).text() + '</span>';
-                $(this).parents('.js-ajaxForm').find('.js-pathContent').append(headerElem);
+                var currentLasHeader = $(this).parents('.js-ajaxForm').find('.js-pathContent .js-path:last');
+                if (!currentLasHeader || (currentLasHeader.attr('data-path') != $(this).attr('data-path'))) {
+                    var headerElem = '<span class="Folder__path js-path" data-path="' + $(this).attr('data-path') + '">' + $(this).text() + '</span>';
+                    $(this).parents('.js-ajaxForm').find('.js-pathContent').append(headerElem);
+                }
             }
             GetPath($(this).parents('.js-folderContent'), $(this));
         });
@@ -74,13 +77,17 @@ $(document).ready(function(){
                 var elem = $(this);
                 var fileItems = form.find('.js-fileItems');
                 var tabObj = $('.js-ajaxTabContent[data-tab-id="' + tabID + '"]').last().get(0).repObject;
+                var needRemove = $(this).attr('data-remove') == 'Y';
                 if (tabObj) {
                     try {
                         $.getJSON(subdomen + path, function(input){
                             tabObj.appendPreview(input, path);
                             fileItems.append('<div class="FileItem js-fileItem" data-file-path="' + path + '">' + path + '<div class="FileItem__remove js-fileRemove">Удалить</div></div>');
-                            form.find('.js-path:first').nextAll('.js-path').remove();
-                            form.find('.js-path:first').get(0).click();
+                            //сброс проводника
+                            if (needRemove) {
+                                form.find('.js-path:first').nextAll('.js-path').remove();
+                                form.find('.js-path:first').get(0).click();
+                            }
                         });
                     } catch (e) {
                         console.log(e);
@@ -120,7 +127,7 @@ $(document).ready(function(){
                             } else {
                                 tabObj.initialize($('.js-ajaxTabContent[data-tab-id="' + tabID + '"]').last().get(0));
                             }
-                            if (buttonView.text() == 'STATS') {
+                            if (buttonView.text() == 'ТАБЛИЦЫ') {
                                 buttonView.get(0).click();
                             }
                         });

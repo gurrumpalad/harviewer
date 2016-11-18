@@ -42,8 +42,9 @@ header("Content-Type: text/html; charset=utf-8");
 <!doctype html>
 <html>
 <head>
-    <title>HTTP Archive Viewer - INT</title>
+    <title>Просмотрщик HTTP архивов - ИНТ</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
     <link rel="stylesheet" href="css/harViewer.css" type="text/css">
 </head>
 <body class="js-ajaxListener">
@@ -69,9 +70,9 @@ header("Content-Type: text/html; charset=utf-8");
                         <div class="FileList js-fileItems"></div>
                     </div>
 
-                    <button class="ViewButton active js-viewToggle" data-tab-id="1" data-tab-name="Preview1">STATS</button>
-                    <button class="ViewButton js-viewToggle" data-tab-id="1" data-tab-name="DOM1">HAR</button>
-                    <button class="ViewButton ViewButton--second js-doubleView">DOUBLE VIEW</button>
+                    <button class="ViewButton active js-viewToggle" data-tab-id="1" data-tab-name="Preview1">ТАБЛИЦЫ</button>
+                    <button class="ViewButton js-viewToggle" data-tab-id="1" data-tab-name="DOM1">ДЕРЕВО</button>
+                    <button class="ViewButton ViewButton--second js-doubleView">ДВА ОКНА</button>
                 </div>
                 <div class="Content">
                     <div class="Content__tab js-ajaxTabContent" data-tab-id="1"></div>
@@ -96,9 +97,9 @@ header("Content-Type: text/html; charset=utf-8");
                         <div class="FileList js-fileItems"></div>
                     </div>
 
-                    <button class="ViewButton active js-viewToggle" data-tab-id="2" data-tab-name="Preview2">STATS</button>
-                    <button class="ViewButton js-viewToggle" data-tab-id="2" data-tab-name="DOM2">HAR</button>
-                    <button class="ViewButton ViewButton--second js-singleView">SINGLE VIEW</button>
+                    <button class="ViewButton active js-viewToggle" data-tab-id="2" data-tab-name="Preview2">ТАБЛИЦЫ</button>
+                    <button class="ViewButton js-viewToggle" data-tab-id="2" data-tab-name="DOM2">ДЕРЕВО</button>
+                    <button class="ViewButton ViewButton--second js-singleView">ОДНО ОКНО</button>
                 </div>
                 <div class="Content">
                     <div class="Content__tab js-ajaxTabContent" data-tab-id="2"></div>

@@ -3,12 +3,13 @@
 define(
 {
     "root": {
-        "pageLoad": "Page Load",
-        "domLoad": "DOM Load",
-        "serverTime": "Server Time",
-        "finishTime": "Finish Time",
-        "request": "Request",
-        "requests": "Requests",
-        "pageBarTooltip": "Click to select and include in statistics preview."
+        "pageLoad": "Загрузка страницы",
+        "domLoad": "Загрузка DOM",
+        "serverTime": "Ответ сервера",
+        "finishTime": "Суммарное время",
+        "request": "запрос",
+        "requests": "запросов",
+        "requests2": "запроса",
+        "pageBarTooltip": "Нажмите, чтобы увидеть статистику в диаграммах."
     }
 });

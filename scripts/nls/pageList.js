@@ -3,15 +3,15 @@
 define(
 {
     "root": {
-        "column.label.index": "Index",
+        "column.label.index": "Индекс",
         "column.label.url": "URL",
-        "column.label.status": "Status",
-        "column.label.type": "Type",
-        "column.label.domain": "Domain",
-        "column.label.serverIPAddress": "Server IP Address",
-        "column.label.connection": "Connection",
-        "column.label.size": "Size",
-        "column.label.timeline": "Timeline",
-        "action.label.Reset": "Reset"
+        "column.label.status": "Статус",
+        "column.label.type": "Тип",
+        "column.label.domain": "Домен",
+        "column.label.serverIPAddress": "IP адрес",
+        "column.label.connection": "Соединение",
+        "column.label.size": "Размер",
+        "column.label.timeline": "Шкала",
+        "action.label.Reset": "Сброс"
     }
 });

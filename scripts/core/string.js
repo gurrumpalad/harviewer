@@ -31,7 +31,7 @@ Str.formatSize = function(bytes)
     sizePrecision = (sizePrecision < -1) ? -1 : sizePrecision;
 
     if (sizePrecision === -1)
-        return bytes + " B";
+        return bytes + " байт";
 
     var a = Math.pow(10, sizePrecision);
 
@@ -40,11 +40,11 @@ Str.formatSize = function(bytes)
     else if (bytes === 0)
         return "0";
     else if (bytes < 1024)
-        return bytes + " B";
+        return bytes + " байт";
     else if (bytes < (1024*1024))
-        return Math.round((bytes/1024)*a)/a + " KB";
+        return Math.round((bytes/1024)*a)/a + " КБ";
 
-    return Math.round((bytes/(1024*1024))*a)/a + " MB";
+    return Math.round((bytes/(1024*1024))*a)/a + " МБ";
 };
 
 /**
@@ -56,11 +56,11 @@ Str.formatTime = function(elapsed)
     if (elapsed === -1)
         return "-"; // should be &nbsp; but this will be escaped so we need something that is no whitespace
     else if (elapsed < 1000)
-        return elapsed + "ms";
+        return elapsed + " мс";
     else if (elapsed < 60000)
-        return (Math.ceil(elapsed/10) / 100) + "s";
+        return (Math.ceil(elapsed/10) / 100) + " с";
 
-    return (Math.ceil((elapsed/60000)*100)/100) + "m";
+    return (Math.ceil((elapsed/60000)*100)/100) + " м";
 };
 
 /**

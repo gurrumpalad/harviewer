@@ -3,13 +3,13 @@
 define(
 {
     "root": {
-        "timeLoad": "Time",
-        "sizeContent": "Size",
-        "pageLoad": "Page Load",
-        "domLoad": "DOM Load",
-        "serverTime": "Server Time",
-        "finishTime": "Finish Time",
-        "request": "Request",
-        "requests": "Requests",
+        "timeLoad": "Время",
+        "sizeContent": "Размер",
+        "pageLoad": "Загрузка страницы",
+        "domLoad": "Загрузка DOM",
+        "serverTime": "Ответ сервера",
+        "finishTime": "Суммарное время",
+        "request": "Запрос",
+        "requests": "Запросы",
     }
 });

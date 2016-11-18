@@ -5,26 +5,26 @@ define(
     "root": {
         "pieLabelDNS": "DNS",
         "pieLabelSSL": "SSL/TLS",
-        "pieLabelConnect": "Connect",
-        "pieLabelBlocked": "Blocked",
-        "pieLabelSend": "Send",
-        "pieLabelWait": "Wait",
-        "pieLabelReceive": "Receive",
+        "pieLabelConnect": "Соединение",
+        "pieLabelBlocked": "Блокировано",
+        "pieLabelSend": "Отправлено",
+        "pieLabelWait": "Ожидание",
+        "pieLabelReceive": "Получение",
 
         "pieLabelHTMLText": "HTML/Text",
         "pieLabelJavaScript": "JavaScript",
         "pieLabelCSS": "CSS",
         "pieLabelImage": "Image",
         "pieLabelFlash": "Flash",
-        "pieLabelOthers": "Others",
+        "pieLabelOthers": "Другое",
 
-        "pieLabelHeadersSent": "Headers Sent",
-        "pieLabelBodiesSent": "Bodies Sent",
-        "pieLabelHeadersReceived": "Headers Received",
-        "pieLabelBodiesReceived": "Bodies Received",
+        "pieLabelHeadersSent": "Отправка заголовков",
+        "pieLabelBodiesSent": "Отправка данных",
+        "pieLabelHeadersReceived": "Получение заголовков",
+        "pieLabelBodiesReceived": "Получение данных",
 
-        "pieLabelDownloaded": "Downloaded",
-        "pieLabelPartial": "Partial",
-        "pieLabelFromCache": "From Cache"
+        "pieLabelDownloaded": "Загружено",
+        "pieLabelPartial": "Частично из кэша",
+        "pieLabelFromCache": "Из кэша"
     }
 });

@@ -284,7 +284,6 @@ Menu.prototype = Lib.extend(Controller,
         var offsetLeft = Lib.isIE6 ? 1 : -4;  // IE6 problem with fixed position
         var box = Lib.getElementBox(target);
         var offset = {top: 0, left: 0};
-
         this.show(
             box.left + offsetLeft - offset.left,
             box.top + box.height - 5 - offset.top
@@ -320,12 +319,12 @@ Menu.prototype = Lib.extend(Controller,
         this.elementStyle.visibility = "hidden";
 
         var size = Lib.getWindowSize();
-
         x = Math.min(x, size.width - this.element.clientWidth - 10);
         x = Math.max(x, 0);
-
+        /*
+        //меню уплывает вверх, не учтена прокрутка
         y = Math.min(y, size.height - this.element.clientHeight - 10);
-        y = Math.max(y, 0);
+        y = Math.max(y, 0);*/
 
         this.elementStyle.left = x + "px";
         this.elementStyle.top = y + "px";

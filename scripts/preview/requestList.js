@@ -1218,14 +1218,14 @@ RequestList.prototype = domplate(
 
         // xxxHonza: localization?
         if (page && page.pageTimings.onLoad > 0)
-            timeText += " (onload: " + Lib.formatTime(page.pageTimings.onLoad.toFixed(2)) + ")";
+            timeText += " (загрузка страницы: " + Lib.formatTime(page.pageTimings.onLoad.toFixed(2)) + ")";
 
         timeLabel.innerHTML = timeText;
     },
 
     formatRequestCount: function(count)
     {
-        return count + " " + (count === 1 ? Strings.request : Strings.requests);
+        return count + " " + (count === 1 ? Strings.request : (((count % 10) > 0 && (count % 10) < 5) ? Strings.requests2 : Strings.requests));
     },
 
     summarizePhase: function(phase)

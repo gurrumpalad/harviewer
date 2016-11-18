@@ -3,36 +3,37 @@
 define(
 {
     "root": {
-        "summaryFromCache": "From Cache",
-        "resourceFromCache": "Resource from cache",
-        "uncompressed": "Uncompressed",
+        "summaryFromCache": "из кэша",
+        "resourceFromCache": "данные из кэша",
+        "uncompressed": "в несжатом виде",
         "menuBreakLayout": "Break Timeline Layout",
-        "menuOpenRequestInWindow": "Open Request in New Window",
-        "menuOpenResponseInWindow": "Open Response in New Window",
-        "request": "Request",
-        "requests": "Requests",
+        "menuOpenRequestInWindow": "Открыть запрос в новом окне",
+        "menuOpenResponseInWindow": "Открыть ответ сервера в новом окне",
+        "request": "запрос",
+        "requests": "запросов",
+        "requests2": "запроса",
 
-        "tooltipSize": "%S (%S bytes)",
-        "tooltipZippedSize": "%S (%S bytes) - compressed",
-        "tooltipUnzippedSize": "%S (%S bytes) - uncompressed",
-        "unknownSize": "Unknown size",
+        "tooltipSize": "%S (%S байт)",
+        "tooltipZippedSize": "%S (%S байт) - сжато",
+        "tooltipUnzippedSize": "%S (%S байт) - в несжатом виде",
+        "unknownSize": "размер не известен",
 
-        "request.Started": "Request start time since the beginning",
-        "request.phases.label": "Request phases start and elapsed time relative to the request start:",
-        "request.phase.Resolving": "DNS Lookup",
-        "request.phase.Connecting": "Connecting",
-        "request.phase.Blocking": "Blocking",
-        "request.phase.Sending": "Sending",
-        "request.phase.Waiting": "Waiting",
-        "request.phase.Receiving": "Receiving",
+        "request.Started": "Время запроса после начала",
+        "request.phases.label": "Время и продолжительность, относительно начала запроса:",
+        "request.phase.Resolving": "Поиск DNS",
+        "request.phase.Connecting": "Соединение",
+        "request.phase.Blocking": "Блокировка",
+        "request.phase.Sending": "Отправка",
+        "request.phase.Waiting": "Ожидание",
+        "request.phase.Receiving": "Получение",
 
-        "request.timings.label": "Event timing relative to the request start:",
-        "ContentLoad": "DOM Loaded",
-        "WindowLoad": "Page Loaded",
-        "page.event.Load": "Page Loaded",
+        "request.timings.label": "События страницы, относительно начала запроса:",
+        "ContentLoad": "Загрузка DOM",
+        "WindowLoad": "Загрузка страницы",
+        "page.event.Load": "Загрузка страницы",
 
         "menuBreakTimeline": "Break Timeline Layout",
-        "menuOpenRequest": "Open Request in New Window",
-        "menuOpenResponse": "Open Response in New Window"
+        "menuOpenRequest": "Открыть запрос в новом окне",
+        "menuOpenResponse": "Открыть ответ сервера в новом окне"
     }
 });
