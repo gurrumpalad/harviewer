@@ -6,14 +6,12 @@
 define("tabs/harSummary", [
     "domplate/domplate",
     "core/lib",
-    "core/StatsService",
     "i18n!nls/harSummary",
     "preview/harModel",
-    "core/trace",
     "core/url"
 ],
 
-function(Domplate, Lib, StatsService, Strings, HarModel, Trace, Url) {
+function(Domplate, Lib, Strings, HarModel, Url) {
 
 var domplate = Domplate.domplate;
 var DIV = Domplate.DIV;
@@ -98,14 +96,6 @@ Summary.prototype = domplate(
         Lib.setClass(this.element, "opened");
     },
 
-    cleanUp: function()
-    {
-        timingPie.cleanUp();
-        contentPie.cleanUp();
-        trafficPie.cleanUp();
-        cachePie.cleanUp();
-    },
-
     // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
     // Timeline Listener
 
@@ -173,8 +163,8 @@ Summary.prototype = domplate(
             var modelEntries = this.model.getAllEntries();
             var allEntries = {};
             var enToPages = {};
-            var pageToEntry = {};
-            for (var j = 0; j < modelEntries.length; j++) {
+            var pagesLength = pages.length;
+            for (var j = 0, modelEntLength = modelEntries.length; j < modelEntLength; j++) {
                 if (
                     modelEntries[j]
                     && modelEntries[j].pageref
@@ -210,23 +200,9 @@ Summary.prototype = domplate(
                         enToPages[modelEntries[j].pageref][localUrl] = modelEntries[j];
                     }
 
-                    //запросы к страницам
-                    if (pageToEntry[localUrl] === undefined) {
-                        pageToEntry[localUrl] = {};
-                    }
-                    if (pageToEntry[localUrl][modelEntries[j].pageref] === undefined) {
-                        pageToEntry[localUrl][modelEntries[j].pageref] = modelEntries[j];
-                    }
-
-
-
                     if (allEntries[localUrl] === undefined) {
                         allEntries[localUrl] = modelEntries[j];
-                    } /*else {
-                        var iter = 1;
-                        while (allEntries[(localUrl + '' + Number(++iter))]) {};
-                        allEntries[(localUrl + '' + iter)] = modelEntries[j];
-                    }*/
+                    }
                 }
             }
             obj['pages'] = []; // header
@@ -236,7 +212,7 @@ Summary.prototype = domplate(
             var timing = [];
             var sizing = [];
             var requests = [];
-            for (var i = 0; i < pages.length; i++) {
+            for (var i = 0; i < pagesLength; i++) {
                 if (pages[i] && pages[i].id) {
                     //добавляем заголовок для страницы
                     var curPageHeader = {title: '', time: ''};
@@ -341,7 +317,7 @@ Summary.prototype = domplate(
                         }
                     );
 
-                    for (var k = 0; k < requests[i].length; k++) {
+                    for (var k = 0, reqilength = requests[i].length; k < reqilength; k++) {
                         if (requests[i][k]) {
                             var startedDateTime = Lib.parseISO8601(requests[i][k].startedDateTime);
                             if (!minTime || startedDateTime < minTime) {
@@ -357,7 +333,6 @@ Summary.prototype = domplate(
                     curTiming.push({class:"Page__totalTime", content: Strings.finishTime + ": " + Lib.formatTime(totalTime.toFixed(2))});
                     timing.push({class: "Resume__timing", content: curTiming});
                     sizing.push({class: "Resume__sizing", content: curSizing});
-
                 }
             }
 
@@ -377,7 +352,7 @@ Summary.prototype = domplate(
                 var curMinTime = 2048000000;
                 var curMaxSize = 0;
                 var curMinSize = 2048000000;
-                for (var i = 0; i < pages.length; i++) {
+                for (var i = 0; i < pagesLength; i++) {
                     if (pages[i] && pages[i].id) {
                         var localRowWeight = 0;
                         var curEntryContent = {time: '', ctime: '', vtime: 0, title: '', size: '', csize: '', vsize: 0, href: ''};
@@ -392,7 +367,7 @@ Summary.prototype = domplate(
                             if (enToPages[pages[i].id][(entry.substr(0, entry.length - 1))]) {
                                 curCounter = Number(entry.substr(entry.length - 1));
                             }
-                            for (var loc = 0; loc < requests[i].length; loc++) {
+                            for (var loc = 0, requiloclen = requests[i].length; loc < requiloclen; loc++) {
                                 if (
                                     requests[i][loc]
                                     && requests[i][loc].request.url
@@ -457,8 +432,9 @@ Summary.prototype = domplate(
                 //убираем класс у одинаковых элементов
                 var entryClass = 'Added';
                 var countClass = 0;
-                for (var m = 0; m < pages.length; m++) {
+                for (var m = 0; m < pagesLength; m++) {
                     if (curRowEntry[m]) {
+                        //классы для лучшего и худшего времени и размера
                         if (curRowCount > 1 && curRowEntry[m].content && curRowEntry[m].content.vsize && curRowEntry[m].content.vtime) {
                             if (curMinSize != curMaxSize) {
                                 if (curRowEntry[m].content.vsize == curMinSize) {
@@ -480,8 +456,8 @@ Summary.prototype = domplate(
                         }
                     }
                 }
-                if (countClass == pages.length) {
-                    for (var m = 0; m < pages.length; m++) {
+                if (countClass == pagesLength) {
+                    for (var m = 0; m < pagesLength; m++) {
                         if (curRowEntry[m] && curRowEntry[m].class) {
                             curRowEntry[m].class = '';
                         }
@@ -495,7 +471,7 @@ Summary.prototype = domplate(
                 }
                 tempEntries[curRowWeight] = curRowEntry;
             }
-            for (var key = 0; key < tempEntries.length; key++) {
+            for (var key = 0, tmpEntLength = tempEntries.length; key < tmpEntLength; key++) {
                 if (tempEntries[key]) {
                     obj['entries'].push(tempEntries[key]);
                 }
