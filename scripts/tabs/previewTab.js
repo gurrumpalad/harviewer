@@ -45,6 +45,7 @@ function PreviewTab(model)
 PreviewTab.prototype = Lib.extend(TabView.Tab.prototype,
 {
     id: "Preview",
+    iterator: 1,
     label: Strings.previewTabLabel,
 
     // Use tabBodyTag so, the basic content layout is rendered immediately
@@ -64,6 +65,7 @@ PreviewTab.prototype = Lib.extend(TabView.Tab.prototype,
     setUniqID: function(id)
     {
         this.id = this.id + id;
+        this.iterator = id;
     },
 
     onUpdateBody: function(tabView, body)
@@ -281,11 +283,15 @@ PreviewTab.prototype = Lib.extend(TabView.Tab.prototype,
 
     showHARSource: function(menu, input, file)
     {
-        var domTab = this.tabView.getTab("DOM");
+        var domTab = this.tabView.getTab("DOM" + this.iterator);
         if (!domTab)
             return;
-
-        domTab.select("DOM");
+        var form = $('.js-ajaxForm[data-tab-id="' + this.iterator + '"]');
+        if (form.length > 0) {
+            $(form).parent().find('.js-viewToggle.active').removeClass('active');
+            $(form).parent().find('.js-viewToggle[data-tab-name="DOM' + this.iterator + '"]').addClass('active');
+        }
+        domTab.select("DOM" + this.iterator);
         domTab.highlightFile(input, file);
     }
 });

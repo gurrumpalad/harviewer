@@ -333,6 +333,11 @@
     display: block;
 }
 
+.previewSummary {
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+
 .pageSummaryHeader {
     background-color: #f2f9fc;
     border: 1px solid #c9e6f2;
@@ -542,4 +547,52 @@
 
 .netPageTimingBar {
     box-sizing: content-box;
+}
+
+.entry__Size--bad {
+    color: #e24329;
+}
+.entry__Time--bad {
+    color: #e24329;
+}
+
+.entry__Size--good {
+    color: #44aa22;
+}
+.entry__Time--good {
+    color: #44aa22;
+}
+
+
+.Frame--2 .netRow.opened + .netInfoRow .tabView.requestBody,
+.Frame--2 .netRow.opened + .netInfoRow .tabView.requestBody tbody,
+.Frame--2 .netRow.opened + .netInfoRow .tabView.requestBody .netInfoText,
+.Frame--2 .netRow.opened + .netInfoRow .tabView.requestBody .netInfoText tbody,
+.Frame--2 .netRow.opened + .netInfoRow .tabView.requestBody .netInfoText tbody tr,
+.Frame--2 .netRow.opened + .netInfoRow .tabView.requestBody .netInfoText tbody tr.netInfoResponseHeadersTitle td,
+.Frame--2 .netRow.opened + .netInfoRow .tabView.requestBody .netInfoText tbody tr.netInfoRequestHeadersTitle td,
+.Frame--2 .netRow.opened + .netInfoRow .tabView.requestBody .netInfoText tbody .netInfoHeadersGroup {
+    width: 100%;
+    position: relative;
+    display: block;
+}
+.Frame--2 .netRow.opened + .netInfoRow .tabView.requestBody .netInfoText tbody .netInfoParamValue {
+    display: block;
+    padding-left: 20%;
+    position: relative;
+    width: 80%;
+}
+
+.Frame--2 .netRow.opened + .netInfoRow .tabView.requestBody .netInfoText tbody .netInfoParamValue pre {
+    display: block;
+    word-wrap: break-word;
+    white-space: pre-wrap;
+    width: 133%;
+}
+
+.Frame--2 .netRow.opened + .netInfoRow .tabView.requestBody .netInfoText tbody .netInfoParamName {
+    display: block;
+    float: left;
+    width: 19.99%;
+    position: relative;
 }

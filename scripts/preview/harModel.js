@@ -153,6 +153,11 @@ HarModel.prototype =
         return HarModel.getPageEntries(this.input, page);
     },
 
+    getPageEntryN: function(page, num)
+    {
+        return HarModel.getPageEntryN(this.input, page, num);
+    },
+
     getAllEntries: function(page)
     {
         return this.input ? this.input.log.entries : [];
@@ -338,6 +343,34 @@ HarModel.getPageEntries = function(input, page)
     }
 
     return result;
+};
+
+HarModel.getPageEntryN = function(input, page, num)
+{
+    var result = [];
+
+    var entries = input.log.entries;
+    if (!entries)
+        return result;
+
+    for (var i=0; i<entries.length; i++)
+    {
+        var entry = entries[i];
+
+        // Return all requests that doesn't have a parent page.
+        if (!entry.pageref && !page)
+            result.push(entry);
+
+        // Return all requests for the specified page.
+        if (page && entry.pageref === page.id)
+            result.push(entry);
+    }
+
+    if (result[num]) {
+        return result[num]
+    }
+
+    return null;
 };
 
 // xxxHonza: optimize using a map?

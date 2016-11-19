@@ -70,8 +70,8 @@ Summary.prototype = domplate(
             FOR("page", "$pages",
                 DIV({"class": "Summary__entry $page.class"},
                     A({"class": "entry__Title", "href": "$page.content.href"}, "$page.content.title"),
-                    SPAN({"class": "entry__Time"}, "$page.content.time"),
-                    SPAN({"class": "entry__Size"}, "$page.content.size")
+                    SPAN({"class": "entry__Time $page.content.ctime"}, "$page.content.time"),
+                    SPAN({"class": "entry__Size $page.content.csize"}, "$page.content.size")
                 )
             )
         ),
@@ -202,6 +202,12 @@ Summary.prototype = domplate(
                     }
                     if (enToPages[modelEntries[j].pageref][localUrl] === undefined) {
                         enToPages[modelEntries[j].pageref][localUrl] = modelEntries[j];
+                    } else {
+
+                        var iter = 1;
+                        while (enToPages[modelEntries[j].pageref][(localUrl + '' + Number(++iter))]) {};
+                        localUrl = localUrl + '' + iter;
+                        enToPages[modelEntries[j].pageref][localUrl] = modelEntries[j];
                     }
 
                     //запросы к страницам
@@ -216,7 +222,11 @@ Summary.prototype = domplate(
 
                     if (allEntries[localUrl] === undefined) {
                         allEntries[localUrl] = modelEntries[j];
-                    }
+                    } /*else {
+                        var iter = 1;
+                        while (allEntries[(localUrl + '' + Number(++iter))]) {};
+                        allEntries[(localUrl + '' + iter)] = modelEntries[j];
+                    }*/
                 }
             }
             obj['pages'] = []; // header
@@ -225,6 +235,7 @@ Summary.prototype = domplate(
 
             var timing = [];
             var sizing = [];
+            var requests = [];
             for (var i = 0; i < pages.length; i++) {
                 if (pages[i] && pages[i].id) {
                     //добавляем заголовок для страницы
@@ -251,13 +262,13 @@ Summary.prototype = domplate(
                     if (onLoad > 0)
                         curTiming.push({class:"Page__domLoad", content: Strings.domLoad + ": " + Lib.formatTime(onLoad.toFixed(2))});
 
-                    var requests = HarModel.getPageEntries(this.model.input, pages[i]);
-                    var docRequest = requests[0] ? requests[0] : null;
+                    requests[i] = HarModel.getPageEntries(this.model.input, pages[i]);
+                    var docRequest = requests[i][0] ? requests[i][0] : null;
                     if (docRequest && docRequest.time) {
                         curTiming.push({class:"Page__serverPing", content: Strings.serverTime + ": " + Lib.formatTime(docRequest.time.toFixed(2))});
                     }
                     var curSizing = [];
-                    var pageSizing = this.processor({entries: requests}, pages[i].startedDateTime, curDomen);
+                    var pageSizing = this.processor({entries: requests[i]}, pages[i].startedDateTime, curDomen);
 
                     var minTime = 0;
                     var maxTime = 0;
@@ -330,13 +341,13 @@ Summary.prototype = domplate(
                         }
                     );
 
-                    for (var k = 0; k < requests.length; k++) {
-                        if (requests[k]) {
-                            var startedDateTime = Lib.parseISO8601(requests[k].startedDateTime);
+                    for (var k = 0; k < requests[i].length; k++) {
+                        if (requests[i][k]) {
+                            var startedDateTime = Lib.parseISO8601(requests[i][k].startedDateTime);
                             if (!minTime || startedDateTime < minTime) {
                                 minTime = startedDateTime;
                             }
-                            var fileEndTime = startedDateTime + requests[k].time;
+                            var fileEndTime = startedDateTime + requests[i][k].time;
                             if (fileEndTime > maxTime) {
                                 maxTime = fileEndTime;
                             }
@@ -355,35 +366,45 @@ Summary.prototype = domplate(
 
             obj['class'] = 'summaryPage--' + obj['pages'].length;
 
-
-
-
             //добавляем содержимое
-
             var entry = null;
-            var tempEntries = {};
-            var arHelpEntries = [];
-            var requests = [];
+            var tempEntries = [];
             for (entry in allEntries) {
                 var curRowEntry = [];
-                var curRowWeight = modelEntries.length;
+                var curRowWeight = 0;
+                var curRowCount = 0;
+                var curMaxTime = 0;
+                var curMinTime = 2048000000;
+                var curMaxSize = 0;
+                var curMinSize = 2048000000;
                 for (var i = 0; i < pages.length; i++) {
                     if (pages[i] && pages[i].id) {
-                        var localRowWeight = 0;//Number(i + 1);
-                        var curEntryContent = {time: '', title: '', size: '', href: ''};
+                        var localRowWeight = 0;
+                        var curEntryContent = {time: '', ctime: '', vtime: 0, title: '', size: '', csize: '', vsize: 0, href: ''};
                         var curEntryClass = "Deleted";
                         if (enToPages[pages[i].id] && enToPages[pages[i].id][entry]) {
                             //заголовок
                             var localEntry = enToPages[pages[i].id][entry];
-                            var requests = HarModel.getPageEntries(this.model.input, pages[i]);
-                            for (var loc = 0; loc < requests.length; loc++) {
+                            if (!requests[i]) {
+                                requests[i] = HarModel.getPageEntries(this.model.input, pages[i]);
+                            }
+                            var curCounter = 0;
+                            if (enToPages[pages[i].id][(entry.substr(0, entry.length - 1))]) {
+                                curCounter = Number(entry.substr(entry.length - 1));
+                            }
+                            for (var loc = 0; loc < requests[i].length; loc++) {
                                 if (
-                                    requests[loc]
-                                    && requests[loc].request.url
-                                    && requests[loc].request.url == localEntry.request.url
+                                    requests[i][loc]
+                                    && requests[i][loc].request.url
+                                    && requests[i][loc].request.url.replace(/^https/, 'http') == localEntry.request.url.replace(/^https/, 'http')
                                 ) {
-                                    localRowWeight = Number(loc + 1);
-                                    break;
+                                    if (curCounter > 1) {
+                                        curCounter--;
+                                    } else {
+                                        localRowWeight = Number(loc + 1);
+                                        curRowCount++;
+                                        break;
+                                    }
                                 }
                             }
                             curEntryContent.href = localEntry.request.url;
@@ -404,80 +425,76 @@ Summary.prototype = domplate(
                             curEntryContent.time = '';
                             if (localEntry.time) {
                                 curEntryContent.time = Strings.timeLoad + ": " + Lib.formatTime(localEntry.time.toFixed(2));
+                                curEntryContent.vtime = localEntry.time.toFixed(2);
+                                if (localEntry.time.toFixed(2) > curMaxTime) {
+                                    curMaxTime = localEntry.time.toFixed(2);
+                                }
+                                if (localEntry.time.toFixed(2) < curMinTime) {
+                                    curMinTime = localEntry.time.toFixed(2);
+                                }
                             }
                             //размер
                             var bodySize = localEntry.response.bodySize;
                             var size = (bodySize && bodySize !== -1) ? bodySize : localEntry.response.content.size;
                             curEntryContent.size = Strings.sizeContent + ": " + Lib.formatSize(size);
+                            curEntryContent.vsize = size;
+                            if (size > curMaxSize) {
+                                curMaxSize = size;
+                            }
+                            if (size < curMinSize) {
+                                curMinSize = size;
+                            }
                         }
 
-                        curRowEntry.push({class: curEntryClass, content: curEntryContent, weight: localRowWeight});
-                        /*if (curRowEntry['key'] === undefined) {
-                            curRowEntry['key'] = '' + localRowWeight;
-                        } else {
-                            curRowEntry['key'] += '' + localRowWeight;
-                        }*/
-                        curRowWeight += localRowWeight;
-                        /*if (curRowWeight > localRowWeight) {
-                            curRowWeight = localRowWeight;
-                        }*/
+                        curRowEntry.push({class: curEntryClass, content: curEntryContent});
+
+                        if (curRowWeight == 0 && localRowWeight > 0) {
+                            curRowWeight = curRowCount + ((localRowWeight - 1) * pages.length);
+                        }
                     }
                 }
 
-                if (curRowWeight > 0) {
-                    curRowWeight = Math.ceil(curRowWeight / pages.length);
-                }
                 //убираем класс у одинаковых элементов
                 var entryClass = 'Added';
                 var countClass = 0;
-                for (var m = 0; m < curRowEntry.length; m++) {
-                    if (curRowEntry[m] && curRowEntry[m].class && curRowEntry[m].class == entryClass) {
-                        countClass++;
+                for (var m = 0; m < pages.length; m++) {
+                    if (curRowEntry[m]) {
+                        if (curRowCount > 1 && curRowEntry[m].content && curRowEntry[m].content.vsize && curRowEntry[m].content.vtime) {
+                            if (curMinSize != curMaxSize) {
+                                if (curRowEntry[m].content.vsize == curMinSize) {
+                                    curRowEntry[m].content.csize = 'entry__Size--good';
+                                } else if (curRowEntry[m].content.vsize == curMaxSize) {
+                                    curRowEntry[m].content.csize = 'entry__Size--bad';
+                                }
+                            }
+                            if (curMinTime != curMaxTime) {
+                                if (curRowEntry[m].content.vtime == curMinTime) {
+                                    curRowEntry[m].content.ctime = 'entry__Time--good';
+                                } else if (curRowEntry[m].content.vtime == curMaxTime) {
+                                    curRowEntry[m].content.ctime = 'entry__Time--bad';
+                                }
+                            }
+                        }
+                        if (curRowEntry[m].class && curRowEntry[m].class == entryClass) {
+                            countClass++;
+                        }
                     }
                 }
-                if (countClass == curRowEntry.length) {
-                    for (var m = 0; m < curRowEntry.length; m++) {
+                if (countClass == pages.length) {
+                    for (var m = 0; m < pages.length; m++) {
                         if (curRowEntry[m] && curRowEntry[m].class) {
                             curRowEntry[m].class = '';
                         }
                     }
                 }
-                //tempEntries[curRowEntry['key']] = curRowEntry;
-
-                /*for (var i = 0; i < pages.length; i++) {
-                    if (
-                        pages[i]
-                        && curRowEntry[i]
-                        && curRowEntry[i].weight > 0
-                    ) {
-                        if (arHelpEntries[i] === undefined) {
-                            arHelpEntries[i] = [];
-                        }
-                        if (arHelpEntries[i][curRowEntry[i].weight] === undefined) {
-                            arHelpEntries[i][curRowEntry[i].weight] = curRowEntry;
-                        }
-                    }
+                if (tempEntries[curRowWeight]) {
+                    while (tempEntries[(--curRowWeight)] && curRowWeight > 0) {};
                 }
-*/
-
-                //curRowWeight = curRowWeight * curRowWeight;
                 if (tempEntries[curRowWeight]) {
                     while (tempEntries[(++curRowWeight)]) {};
                 }
                 tempEntries[curRowWeight] = curRowEntry;
             }
-            //Trace.log(tempEntries);
-
-            /*for (var i = 0; i < modelEntries.length; i++) {
-                for (var j = 0; j < pages.length; j++) {
-                    if (arHelpEntries[j] && arHelpEntries[j][i] && arHelpEntries[j][i]['key']) {
-                        var curKey = arHelpEntries[j][i]['key'];
-                        var tempAr = [];
-                        tempAr.push(arHelpEntries[j][i]);
-
-                    }
-                }
-            }*/
             for (var key = 0; key < tempEntries.length; key++) {
                 if (tempEntries[key]) {
                     obj['entries'].push(tempEntries[key]);
@@ -486,8 +503,6 @@ Summary.prototype = domplate(
         }
         return obj;
     },
-
-
 
 
 
