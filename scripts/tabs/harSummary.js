@@ -401,10 +401,10 @@ Summary.prototype = domplate(
                             if (localEntry.time) {
                                 curEntryContent.time = Strings.timeLoad + ": " + Lib.formatTime(localEntry.time.toFixed(2));
                                 curEntryContent.vtime = localEntry.time.toFixed(2);
-                                if (localEntry.time.toFixed(2) > curMaxTime) {
+                                if (Number(localEntry.time.toFixed(2)) > Number(curMaxTime)) {
                                     curMaxTime = localEntry.time.toFixed(2);
                                 }
-                                if (localEntry.time.toFixed(2) < curMinTime) {
+                                if (Number(localEntry.time.toFixed(2)) < (curMinTime)) {
                                     curMinTime = localEntry.time.toFixed(2);
                                 }
                             }
@@ -413,10 +413,10 @@ Summary.prototype = domplate(
                             var size = (bodySize && bodySize !== -1) ? bodySize : localEntry.response.content.size;
                             curEntryContent.size = Strings.sizeContent + ": " + Lib.formatSize(size);
                             curEntryContent.vsize = size;
-                            if (size > curMaxSize) {
+                            if (Number(size) > Number(curMaxSize)) {
                                 curMaxSize = size;
                             }
-                            if (size < curMinSize) {
+                            if (Number(size) < Number(curMinSize)) {
                                 curMinSize = size;
                             }
                         }
