@@ -230,19 +230,20 @@ Summary.prototype = domplate(
 
                     //тайминг
                     var curTiming = [];
-                    var onLoad = pages[i].pageTimings.onLoad;
-                    if (onLoad > 0)
-                        curTiming.push({class:"Page__load", content: Strings.pageLoad + ": " + Lib.formatTime(onLoad.toFixed(2))});
-
-                    onLoad = pages[i].pageTimings.onContentLoad;
-                    if (onLoad > 0)
-                        curTiming.push({class:"Page__domLoad", content: Strings.domLoad + ": " + Lib.formatTime(onLoad.toFixed(2))});
-
                     requests[i] = HarModel.getPageEntries(this.model.input, pages[i]);
                     var docRequest = requests[i][0] ? requests[i][0] : null;
                     if (docRequest && docRequest.time) {
                         curTiming.push({class:"Page__serverPing", content: Strings.serverTime + ": " + Lib.formatTime(docRequest.time.toFixed(2))});
                     }
+
+                    onLoad = pages[i].pageTimings.onContentLoad;
+                    if (onLoad > 0)
+                        curTiming.push({class:"Page__domLoad", content: Strings.domLoad + ": " + Lib.formatTime(onLoad.toFixed(2))});
+
+                    var onLoad = pages[i].pageTimings.onLoad;
+                    if (onLoad > 0)
+                        curTiming.push({class:"Page__load", content: Strings.pageLoad + ": " + Lib.formatTime(onLoad.toFixed(2))});
+
                     var curSizing = [];
                     var pageSizing = this.processor({entries: requests[i]}, pages[i].startedDateTime, curDomen);
 
@@ -614,7 +615,7 @@ Summary.prototype = domplate(
                     totalGif += sizeEncoded;
                 }
 
-                if (entry.request.url.match(preg)) {
+                if (!entry.request.url.match(preg)) {
                     imagesThird.push(entry);
                     totalImgThird += sizeEncoded;
                 }
