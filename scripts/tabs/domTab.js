@@ -38,10 +38,11 @@ var TR = Domplate.TR;
 // Search options
 var jsonQueryOption = "searchJsonQuery";
 
-function DomTab()
+function DomTab(model)
 {
     this.toolbar = new Toolbar();
     this.toolbar.addButtons(this.getToolbarButtons());
+    this.model = model;
 
     // Display jsonQuery results as a tree by default.
     this.tableView = false;
@@ -117,6 +118,20 @@ DomTab.prototype = domplate(TabView.Tab.prototype,
         this.updateSearchResultsUI();
 
         // TODO: Re-render the entire tab content here
+    },
+
+    update: function()
+    {
+        if (this.model && this.model.order) {
+            for (var i = 0; i < this.model.order.length; i++) {
+                if (this.model.order[i]) {
+                    var curInput = this.model.getInputByPageID(this.model.order[i]);
+                    if (curInput) {
+                        this.append(curInput);
+                    }
+                }
+            }
+        }
     },
 
     getToolbarButtons: function()

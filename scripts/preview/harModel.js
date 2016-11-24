@@ -26,13 +26,15 @@ function(Lib, JSONSchema, Ref, HarSchema, Cookies, Trace, Strings) {
 function HarModel()
 {
     this.input = null;
+    this.order = null;
 }
 
 HarModel.prototype =
 /** @lends module:preview/harModel.prototype */
 {
-    append: function(input)
+    append: function(input, needPageId, path)
     {
+        var pageIds = [];
         if (!input)
         {
             Trace.error("HarModel.append; Trying to append null input!");
@@ -57,8 +59,8 @@ HarModel.prototype =
         {
             if (input.log.pages)
             {
-                for (var i=0; i<input.log.pages.length; i++)
-                    this.importPage(input.log.pages[i], input.log.entries);
+                for (var i = 0, ilen = input.log.pages.length; i < ilen; i++)
+                    pageIds.push(this.importPage(input.log.pages[i], input.log.entries));
             }
             else
             {
@@ -72,54 +74,103 @@ HarModel.prototype =
         else
         {
             this.input = Lib.cloneJSON(input);
+            for (var i = 0, ilen = this.input.log.pages.length; i < ilen; i++)
+                pageIds.push(this.input.log.pages[i].id);
         }
 
-        return this.input;
+
+        if (path) {
+            if (this.order) {
+                this.order.push(pageIds);
+            } else {
+                this.order = [];
+                this.order.push(pageIds);
+            }
+        }
+        if (needPageId) {
+            return pageIds;
+        } else {
+            return this.input;
+        }
     },
 
-    removeHar: function(input) {
-        if (!input)
-        {
-            Trace.error("HarModel.removeHar; Trying to remove null input!");
-            return;
-        }
-
-        // Sort all requests according to the start time.
-        input.log.entries.sort(function(a, b)
-        {
-            var timeA = Lib.parseISO8601(a.startedDateTime);
-            var timeB = Lib.parseISO8601(b.startedDateTime);
-
-            if (timeA < timeB)
-                return -1;
-            else if (timeA > timeB)
-                return 1;
-
-            return 0;
-        });
-
-        if (this.input)
-        {
-            if (input.log.pages)
-            {
-                for (var i=0; i < input.log.pages.length; i++) {
-                    this.removePage(input.log.pages[i]);
+    removePageByID: function(pageID)
+    {
+        if (pageID && this.input.log.pages) {
+            var tempPages = this.input.log.pages;
+            this.input.log.pages = [];
+            for (var m = 0, len = tempPages.length; m < len; m++) {
+                if (tempPages[m] && tempPages[m].id && tempPages[m].id != pageID) {
+                    this.input.log.pages.push(tempPages[m]);
                 }
             }
-            else
-            {
-                return null;
+            if (this.input.log.entries) {
+                var tempEntry = [];
+                for (var j = 0, entLen = this.input.log.entries.length; j < entLen; j++) {
+                    if (this.input.log.entries[j].pageref != pageID) {
+                        tempEntry.push(this.input.log.entries[j]);
+                    }
+                }
+                this.input.log.entries = tempEntry;
+            }
+            if (this.order) {
+                var tempArOrder = [];
+                for (var i = 0, olen = this.order.length; i < olen; i++) {
+                    if (this.order[i]) {
+                        var tempOrder = [];
+                        for (var k = 0, llen = this.order[i].length; k < llen; k++) {
+                            if (this.order[i][k] && this.order[i][k] != pageID) {
+                                tempOrder.push(this.order[i][k]);
+                            }
+                        }
+                        if (tempOrder.length > 0) {
+                            tempArOrder.push(tempOrder);
+                        }
+                    }
+                }
+                if (tempArOrder.length > 0) {
+                    this.order = tempArOrder;
+                } else {
+                    this.order = null;
+                }
             }
         }
-        else
-        {
-            this.input = null;
-        }
-        if (this.input.log.pages.length <= 0) {
-            this.input = null;
-        }
+    },
 
-        return this.input;
+    getInputByPageID: function(arPageID)
+    {
+        if (arPageID && arPageID.length > 0 && this.input.log.pages) {
+            var tempInput = {};
+            if (this.input.creator) {
+                tempInput.creator = this.input.creator;
+            }
+            if (this.input.version) {
+                tempInput.version = this.input.version;
+            }
+            if (this.input._duration) {
+                tempInput._duration = this.input._duration;
+            }
+            tempInput.log = {};
+            tempInput.log.pages = [];
+            tempInput.log.entries = [];
+            for (var i = 0, plen = arPageID.length; i < plen; i++) {
+                if (arPageID[i] && this.input.log.pages) {
+                    for (var k = 0, iplen = this.input.log.pages.length; k < iplen; k++) {
+                        if (this.input.log.pages[k] && this.input.log.pages[k].id && this.input.log.pages[k].id == arPageID[i]) {
+                            tempInput.log.pages.push(this.input.log.pages[k]);
+                            var curPageID = arPageID[i];
+                            for (var j = 0, ipelen = this.input.log.entries.length; j < ipelen; j++) {
+                                if (this.input.log.entries[j].pageref == curPageID) {
+                                    tempInput.log.entries.push(this.input.log.entries[j]);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            return tempInput;
+        }
+        return null;
     },
 
     // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -132,6 +183,28 @@ HarModel.prototype =
     {
         if (!this.input)
             return [];
+
+        var tempPages = [];
+        if (this.order) {
+            var tempArOrder = [];
+            for (var i = 0, ilen = this.order.length; i < ilen; i++) {
+                if (this.order[i]) {
+                    for (var k = 0, klen = this.order[i].length; k < klen; k++) {
+                        tempArOrder.push(this.order[i][k]);
+                    }
+                }
+            }
+            for (var j = 0, jlen = tempArOrder.length; j < jlen; j++) {
+                for (var m = 0, mlen = this.input.log.pages.length; m < mlen; m++) {
+                    if (this.input.log.pages[m] && this.input.log.pages[m].id && this.input.log.pages[m].id == tempArOrder[j]) {
+                        tempPages.push(this.input.log.pages[m]);
+                    }
+                }
+            }
+        }
+        if (tempPages.length > 0) {
+            return tempPages;
+        }
 
         return this.input.log.pages ? this.input.log.pages : [];
     },
@@ -170,7 +243,7 @@ HarModel.prototype =
         page.id = pageId;
 
         this.input.log.pages.push(page);
-        for (var i=0; i<entries.length; i++)
+        for (var i= 0, ilen = entries.length; i < ilen; i++)
         {
             var entry = entries[i];
             if (entry.pageref === prevPageId)
@@ -179,49 +252,7 @@ HarModel.prototype =
                 this.input.log.entries.push(entry);
             }
         }
-    },
-
-    removePage: function(page)
-    {
-        if (this.input && page) {
-            var pageTitle = page.title;
-            var pageStart = page.startedDateTime;
-            for (var i = 0; i < this.input.log.pages.length; i++) {
-                var curPageTitle = this.input.log.pages[i].title;
-                var curPageStart = this.input.log.pages[i].startedDateTime;
-                if (
-                    curPageStart
-                    && curPageTitle
-                    && curPageStart == pageStart
-                    && curPageTitle == pageTitle
-                ) {
-                    var pageId = this.input.log.pages[i].id;
-                    if (this.input.log.entries) {
-                        for (var j = 0; j < this.input.log.entries.length; j++) {
-                            if (this.input.log.entries[j].pageref === pageId) {
-                                this.input.log.entries[j] = null;
-                            }
-                        }
-                    }
-                    this.input.log.pages[i] = null;
-                    break;
-                }
-            }
-            var tempPages = [];
-            for (var k = 0; k < this.input.log.pages.length; k++) {
-                if (this.input.log.pages[k] && this.input.log.pages[k] != null) {
-                    tempPages.push(this.input.log.pages[k]);
-                }
-            }
-            this.input.log.pages = tempPages;
-            var tempEntry = [];
-            for (var l = 0; l < this.input.log.entries.length; l++) {
-                if (this.input.log.entries[l] && this.input.log.entries[l] != null) {
-                    tempEntry.push(this.input.log.entries[l]);
-                }
-            }
-            this.input.log.entries = tempEntry;
-        }
+        return pageId;
     },
 
     getUniquePageID: function(defaultId)
@@ -237,7 +268,7 @@ HarModel.prototype =
         var counter = 1;
         while (true)
         {
-            var pageId = defaultId + counter;
+            var pageId = Number(defaultId + counter);
             if (!hashTable[pageId])
                 return pageId;
             counter++;

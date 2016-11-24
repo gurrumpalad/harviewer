@@ -119,6 +119,20 @@ PreviewTab.prototype = Lib.extend(TabView.Tab.prototype,
         });
     },
 
+    update: function()
+    {
+        if (this.model && this.model.order) {
+            for (var i = 0; i < this.model.order.length; i++) {
+                if (this.model.order[i]) {
+                    var curInput = this.model.getInputByPageID(this.model.order[i]);
+                    if (curInput) {
+                        this.append(curInput);
+                    }
+                }
+            }
+        }
+    },
+
     getToolbarButtons: function()
     {
         var buttons = [

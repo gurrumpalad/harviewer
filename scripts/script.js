@@ -75,14 +75,12 @@ $(document).ready(function(){
                 }
                 var text = $(this).text();
                 var elem = $(this);
-                var fileItems = form.find('.js-fileItems');
                 var tabObj = $('.js-ajaxTabContent[data-tab-id="' + tabID + '"]').last().get(0).repObject;
                 var needRemove = $(this).attr('data-remove') == 'Y';
                 if (tabObj) {
                     try {
                         $.getJSON(subdomen + path, function(input){
                             tabObj.appendPreview(input, path);
-                            fileItems.append('<div class="FileItem js-fileItem" data-file-path="' + path + '">' + path + '<div class="FileItem__remove js-fileRemove">Удалить</div></div>');
                             //сброс проводника
                             if (needRemove) {
                                 form.find('.js-path:first').nextAll('.js-path').remove();
@@ -103,41 +101,6 @@ $(document).ready(function(){
             $(this).nextAll('.js-path').remove();
         });
         //~проводник - нажатие на ссылки в шапке
-
-        //удаление файла из отображения
-        $(ajaxListener).on('click', '.js-ajaxForm .js-fileRemove', function(){
-            var form = $(this).parents('.js-ajaxForm');
-            var tabID = form.attr('data-tab-id');
-            var filePath = $(this).parents('.js-fileItem').attr('data-file-path');
-            var subdomen = '';
-            if (/.*\/$/.test(document.location.pathname)) {
-                subdomen = document.location.pathname.substr(0, (document.location.pathname.length - 1));
-            }
-            $(this).parents('.js-fileItem').remove();
-            var buttonView = $('.js-viewToggle[data-tab-id="' + tabID + '"]:not(.active)');
-            var tabObj = $('.js-ajaxTabContent[data-tab-id="' + tabID + '"]').last().get(0).repObject;
-            if (tabObj) {
-                var pages = tabObj.model.getPages();
-                if (pages) {
-                    try {
-                        $.getJSON(subdomen + filePath, function(input){
-                            var obj = tabObj.removeHarFile(input, filePath);
-                            if (obj) {
-                                tabObj.initialize($('.js-ajaxTabContent[data-tab-id="' + tabID + '"]').last().get(0), obj);
-                            } else {
-                                tabObj.initialize($('.js-ajaxTabContent[data-tab-id="' + tabID + '"]').last().get(0));
-                            }
-                            if (buttonView.text() == 'ТАБЛИЦЫ') {
-                                buttonView.get(0).click();
-                            }
-                        });
-                    } catch (e) {
-                        console.log(e);
-                    }
-                }
-            }
-        });
-        //~удаление файла из отображения
 
         //переключение вида
         $(ajaxListener).on('click', '.js-doubleView', function () {

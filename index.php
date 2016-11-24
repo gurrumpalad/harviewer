@@ -109,6 +109,7 @@ header("Content-Type: text/html; charset=utf-8");
         <div class="Footer">&copy;<?=date('Y');?> ИНТ ООО САМСОН ОПТ</div>
     </div>
     <script src="scripts/jquery.js"></script>
+    <script src="scripts/ui/jquery-ui.js"></script>
     <script src="scripts/downloadify/js/swfobject.js"></script>
     <script src="scripts/downloadify/src/downloadify.js"></script>
     <script src="scripts/script.js"></script>

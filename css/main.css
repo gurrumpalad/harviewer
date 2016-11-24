@@ -39,12 +39,12 @@
     padding: 0 15px;
     position: relative;
     display: block;
-    height: 290px;
+    height: 355px;
 }
 
 .Filter {
     display: block;
-    height: 252px;
+    height: 313px;
 }
 
 .Filter__label {
@@ -59,7 +59,7 @@
 
 .FileList {
     display: block;
-    height: 70px;
+    height: 104px;
     overflow: auto;
     width: 100%;
     background-color: #fff;
@@ -71,7 +71,6 @@
     color: #333;
     font-size: 14px;
     line-height: 18px;
-    min-height: 34px;
     outline: medium none;
     padding: 0;
     vertical-align: middle;
@@ -127,7 +126,7 @@
     border-width: 0 1px 1px;
     margin-bottom: 10px;
     position: relative;
-    height: 80px;
+    height: 104px;
     overflow: auto;
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.075) inset;
 }
@@ -280,7 +279,7 @@
     float: right;
     position: absolute;
     right: 4px;
-    top: 252px;
+    top: 313px;
 }
 
 .pageDescBox .desc {
