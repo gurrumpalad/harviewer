@@ -148,7 +148,7 @@ PreviewTab.prototype = Lib.extend(TabView.Tab.prototype,
     onDownload: function()
     {
         var model = this.model;
-        if (model.input.log.pages.length > 0) {
+        if (model.input && model.input.log && model.input.log.pages && model.input.log.pages.length > 0) {
             var dataJson = model.toJSON();
             var blob = new Blob([dataJson], {type : 'application/json'});
             var url = window.URL.createObjectURL(blob);
