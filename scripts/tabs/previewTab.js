@@ -88,35 +88,6 @@ PreviewTab.prototype = Lib.extend(TabView.Tab.prototype,
 
         if (input && Cookies.getCookie("summary") === "true")
             this.onSummary(false);
-
-        this.updateDownloadifyButton();
-    },
-
-    updateDownloadifyButton: function()
-    {
-        // Create download button (using Downloadify)
-        var model = this.model;
-        $(".harDownloadButton").downloadify(
-        {
-            filename: function() {
-                return "netData.har";
-            },
-            data: function() {
-                return model ? model.toJSON() : "";
-            },
-            onComplete: function() {},
-            onCancel: function() {},
-            onError: function() {
-                Trace.log(Strings.downloadError);
-                alert(Strings.downloadError);
-            },
-            swf: "scripts/downloadify/media/downloadify.swf",
-            downloadImage: "css/images/download-sprites.png",
-            width: 16,
-            height: 16,
-            transparent: true,
-            append: false
-        });
     },
 
     update: function()
@@ -162,14 +133,34 @@ PreviewTab.prototype = Lib.extend(TabView.Tab.prototype,
             },
             {
                 id: "download",
+                label: 'Скачать',
                 tooltiptext: Strings.downloadTooltip,
-                className: "harDownloadButton"
+                className: "harDownloadButton",
+                command: Lib.bindFixed(this.onDownload, this)
             }
         ];
 
         //buttons.push();
 
         return buttons;
+    },
+
+    onDownload: function()
+    {
+        var model = this.model;
+        if (model.input.log.pages.length > 0) {
+            var dataJson = model.toJSON();
+            var blob = new Blob([dataJson], {type : 'application/json'});
+            var url = window.URL.createObjectURL(blob);
+            var a = document.createElement("a");
+            document.body.appendChild(a);
+            a.style = "display: none";
+            a.href = url;
+            a.download = 'netData.har';
+            a.click();
+            window.URL.revokeObjectURL(url);
+            $(a).remove();
+        }
     },
 
     // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
@@ -189,7 +180,6 @@ PreviewTab.prototype = Lib.extend(TabView.Tab.prototype,
 
         // Re-render toolbar to update label.
         this.toolbar.render();
-        this.updateDownloadifyButton();
 
         Cookies.setCookie("timeline", visible);
     },
@@ -208,7 +198,6 @@ PreviewTab.prototype = Lib.extend(TabView.Tab.prototype,
 
         // Re-render toolbar to update label.
         this.toolbar.render();
-        this.updateDownloadifyButton();
 
         Cookies.setCookie("stats", visible);
     },
@@ -228,7 +217,6 @@ PreviewTab.prototype = Lib.extend(TabView.Tab.prototype,
 
         // Re-render toolbar to update label.
         this.toolbar.render();
-        this.updateDownloadifyButton();
 
         Cookies.setCookie("summary", visible);
     },

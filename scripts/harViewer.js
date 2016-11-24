@@ -8,20 +8,16 @@ define("harViewer", [
     "tabs/previewTab",
     "tabs/domTab",
     "preview/harModel",
-    "preview/harModelLoader",
     "i18n!nls/harViewer",
-    "preview/requestList",
     "core/lib",
     "core/trace",
     "core/cookies"
 ],
 
-function(TabView,  PreviewTab, DomTab, HarModel,
-    Loader, Strings, RequestList, Lib, Trace, Cookies) {
+function(TabView,  PreviewTab, DomTab, HarModel, Strings, Lib, Trace, Cookies) {
 
-var contents = document.getElementsByClassName("js-ajaxTabContent");//.item(document.getElementsByClassName("js-ajaxTabContent").length - 1);
+var contents = document.getElementsByClassName("js-ajaxTabContent");
 
-//document.getElementById("content");
 
 // ********************************************************************************************* //
 // The Application
@@ -34,14 +30,6 @@ function HarView(i)
     this.model = new HarModel();
     this.pages = {};
     this.container = null;
-
-    // Append tabs
-    //this.appendTab(new HomeTab());
-
-    //this.appendTab(new PreviewTab(this.model));
-
-    //this.appendTab(new AboutTab());
-    //this.appendTab(new SchemaTab());
 }
 
 /**
@@ -68,7 +56,7 @@ function HarView(i)
 HarView.prototype = Lib.extend(new TabView(),
 /** @lends HarView */
 {
-    initialize: function(content, inputHar)
+    initialize: function(content)
     {
         this.container = content;
         this.removeAllTabs();
@@ -87,10 +75,6 @@ HarView.prototype = Lib.extend(new TabView(),
         this.render(content);
 
         this.selectTabByName("Preview" + this.iterator);
-
-        if (inputHar) {
-            this.appendPreview(inputHar);
-        }
     },
 
     removeHarPage: function(pageId)
@@ -254,67 +238,6 @@ HarView.prototype = Lib.extend(new TabView(),
         previewTab.select();
 
         Lib.fireEvent(content, "onViewerHARLoaded");
-    },
-
-    onLoadError: function(jqXHR, textStatus, errorThrown)
-    {
-        /*var homeTab = this.getTab("Home");
-        if (homeTab)
-            homeTab.loadInProgress(true, jqXHR.statusText);*/
-
-        Trace.error("harModule.loadRemoteArchive; ERROR ", jqXHR, textStatus, errorThrown);
-    },
-
-    // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
-    // Loading HAR files
-
-    /**
-     * Load HAR file
-     * @param {String} url URL of the target log file
-     * @param {Object} settings A set of key/value pairs taht configure the request.
-     *      All settings are optional.
-     *      settings.jsonp {Boolean} If you wish to force a crossDomain request using JSONP,
-     *          set the value to true. You need to use HARP syntax for the target file.
-     *          Default is false.
-     *      settings.jsonpCallback {String} Override the callback function name used in HARP.
-     *          Default is "onInputData".
-     *      settings.success {Function} A function to be called when the file is successfully
-     *          loaded. The HAR object is passed as an argument.
-     *      settings.ajaxError {Function} A function to be called if the AJAX request fails.
-     *          An error object is pased as an argument.
-     */
-    loadHar: function(url, settings)
-    {
-        settings = settings || {};
-        return Loader.load(this, url,
-            settings.jsonp,
-            settings.jsonpCallback,
-            settings.success,
-            settings.ajaxError);
-    },
-
-    /**
-     * Load HAR and HARP file. See {@link harModelLoader.loadArchives} for documentation.
-     */
-    loadArchives: function(hars, harps, callbackName, callback, errorCallback, doneCallback) {
-        var self = this;
-        return Loader.loadArchives(hars, harps, callbackName, function(jsonString) {
-            self.appendPreview(jsonString);
-            if (callback) {
-                callback.apply(this, arguments);
-            }
-        }, errorCallback, doneCallback);
-    },
-
-    /**
-     * Use to customize list of request columns displayed by default.
-     *
-     * @param {String} cols Column names separated by a space.
-     * @param {Boolean} avoidCookies Set to true if you don't want to touch cookies.
-     */
-    setPreviewColumns: function(cols, avoidCookies)
-    {
-        RequestList.setVisibleColumns(cols, avoidCookies);
     }
 });
 
@@ -345,7 +268,6 @@ if (contents.length > 0) {
             var harFile = null;
             var tempAr = [];
             for (harFile in harFiles) {
-                //harFiles = harFiles.split('#');
                 if (harFiles[harFile].length > 0) {
                     for (var j = 0, jlen = harFiles[harFile].length; j < jlen; j++) {
                         tempAr[harFiles[harFile][j]] = harFile;
