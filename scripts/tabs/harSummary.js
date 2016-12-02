@@ -245,7 +245,7 @@ Summary.prototype = domplate(
                         curTiming.push({class:"Page__load", content: Strings.pageLoad + ": " + Lib.formatTime(onLoad.toFixed(2))});
 
                     var curSizing = [];
-                    var pageSizing = this.processor({entries: requests[i]}, pages[i].startedDateTime, curDomen);
+                    var pageSizing = this.processor({entries: requests[i], pages: [pages[i]]}, pages[i].startedDateTime, curDomen);
 
                     var minTime = 0;
                     var maxTime = 0;
@@ -268,6 +268,34 @@ Summary.prototype = domplate(
                             class:"Page__totalSize",
                             content: "Размер: " + Lib.formatSize(Number(pageSizing.total_download_own + pageSizing.total_download_third))
                             + ", своих " + Lib.formatSize(pageSizing.total_download_own) + ", чужих " + Lib.formatSize(pageSizing.total_download_third)
+                        }
+                    );
+
+                    curSizing.push(
+                        {
+                            class:"Page__docCount",
+                            content: "Скачанное (уникальные запросы):"
+                        }
+                    );
+
+                    curSizing.push(
+                        {
+                            class:"Page__docCount",
+                            content: "до загрузки DOM - " + Lib.formatSize(pageSizing.dom_content_load_download)
+                        }
+                    );
+
+                    curSizing.push(
+                        {
+                            class:"Page__docCount",
+                            content: "после загрузки DOM, до загрузки страницы - " + Lib.formatSize(Number(pageSizing.onload_download))
+                        }
+                    );
+
+                    curSizing.push(
+                        {
+                            class:"Page__totalSize",
+                            content: "после загрузки страницы - " + Lib.formatSize(pageSizing.finish_download)
                         }
                     );
 
@@ -501,6 +529,11 @@ Summary.prototype = domplate(
             total_download_own: data.data.total.size - data.data.third.size,
             total_download_third: data.data.third.size,
 
+            // загрузка до событий
+            dom_content_load_download: data.data.total.onContentLoadTransfer,
+            onload_download: data.data.total.onLoadTransfer,
+            finish_download: data.data.total.sizeTransfer - data.data.total.onContentLoadTransfer - data.data.total.onLoadTransfer,
+
             // всего запросов
             total_entries_own: data.data.total.entries.length - data.data.third.entries.length,
             total_entries_third: data.data.third.entries.length,
@@ -555,6 +588,9 @@ Summary.prototype = domplate(
         var totalThird = 0;
         var totalTransfer = 0;
 
+        var totalTransferOnContentLoad = 0;
+        var totalTransferOnLoad = 0;
+
         var totalImg = 0;
         var totalImgThird = 0;
 
@@ -593,12 +629,24 @@ Summary.prototype = domplate(
             total += sizeEncoded;
             totalTransfer += sizeTransfer;
 
-            if (
-                uniqEntry.indexOf(entry.request.url) === -1
-                && finish < new Date(entry.startedDateTime).getTime() - start + entry.time
-            ) {
-                uniqEntry.push(entry.request.url);
-                finish = new Date(entry.startedDateTime).getTime() - start + entry.time;
+            // работаем с уникальными запросами
+            if (uniqEntry.indexOf(entry.request.url) === -1) {
+
+                if (
+                    new Date(entry.startedDateTime).getTime() - start + entry.time < data.pages[0].pageTimings.onContentLoad
+                ) {
+                    totalTransferOnContentLoad += sizeTransfer;
+                } else if (
+                    new Date(entry.startedDateTime).getTime() - start + entry.time < data.pages[0].pageTimings.onLoad
+                ) {
+                    totalTransferOnLoad += sizeTransfer;
+                }
+
+                // увеличиваем время до окончания загрузки
+                if (finish < new Date(entry.startedDateTime).getTime() - start + entry.time) {
+                    uniqEntry.push(entry.request.url);
+                    finish = new Date(entry.startedDateTime).getTime() - start + entry.time;
+                }
             }
 
             if (entry.response.content.mimeType.match(/image.*/)) {
@@ -677,6 +725,12 @@ Summary.prototype = domplate(
 
                     // размер переданный
                     sizeTransfer: totalTransfer,
+
+                    // переданный до onContentLoad
+                    onContentLoadTransfer: totalTransferOnContentLoad,
+
+                    // переданный до onLoad
+                    onLoadTransfer: totalTransferOnLoad,
 
                     // запросы
                     entries: data.entries
@@ -758,9 +812,6 @@ Summary.prototype = domplate(
             return this.getEncodedSize(entry);
         }
     },
-
-
-
 
 
     render: function(parentNode)
